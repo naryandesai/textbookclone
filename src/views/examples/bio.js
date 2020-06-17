@@ -11,6 +11,8 @@ import DefaultFooter from "components/Footers/DefaultFooter.js";
 
 import {
   Button,
+  Card,
+  CardBody,
   Input,
   InputGroupAddon,
   InputGroupText,
@@ -90,6 +92,76 @@ function Bioprocess() {
     ></img>
     </Col>
   </Row>
+  <Row>
+  <Col className="text-center ml-auto mr-auto" md = "8">
+  <h3 className="title">Testimonials</h3>
+  <Card>
+        <CardBody>
+          <blockquote>
+            <p>
+            "We have used Chemical and Bio-Process Control by Riggs and Karim for
+            several years for our senior course in Process Dynamics and Control at
+            Iowa.  Both the students and the instructors have appreciated the book
+            for its straightforward and practical presentation of control theory and
+            application.  The sections on hardware and PID tuning tie in nicely with
+            our laboratory.  The well-written prose and simple, yet effective graphs
+            of system dynamical responses are strengths of the book.  Finally,
+            teaching feedforward and combined feedforward-feedback control is much
+            more effective using the excel simulator provided with the textbook."
+            </p>
+            <footer>
+              Charles Stanier, <cite title="Source Title">University of Iowa</cite>
+            </footer>
+          </blockquote>
+        </CardBody>
+      </Card>
+      <Card>
+            <CardBody>
+              <blockquote>
+                <p>
+                "This book is written for the Chemical Engineer that needs to learn
+                Process Control for a future career working with Control in an
+                industrial facility.   The text has an excellent mix of the
+                theoretical and practical.  The provided Powerpoint slides also are
+                an excellent basis for giving lectures with this textbook as the
+                required text."
+                </p>
+                <footer>
+                  Brian P. Grady, <cite title="Source Title">University of Oklahoma</cite>
+                </footer>
+              </blockquote>
+            </CardBody>
+          </Card>
+          <Card>
+                <CardBody>
+                  <blockquote>
+                    <p>
+                    “Chemical and Bio-Process Control provides a good balance of industrially relevant practical and theoretical concepts, providing the foundation for teaching undergraduates the fundamentals of process dynamics and control.
+                    The textbook is filled with examples of classic chemical process control and bio-process control problems to help engage students with different career interests.”
+                    </p>
+                    <footer>
+                      Delmar Timms, <cite title="Source Title">University of Nebraska, Lincoln</cite>
+                    </footer>
+                  </blockquote>
+                </CardBody>
+              </Card>
+              <Card>
+                    <CardBody>
+                      <blockquote>
+                        <p>
+                        “I have taught a course on process controls four times using your text. I like the logical organization, clear writing, and a nicely balanced coverage of topics. These latter include the history of process control, key technologies such as the control valve, a reasonable coverage of Laplace transforms and a very insightful coverage of dynamic responses with PID control.
+                        The structure of the text and supporting material help both the instructor and student.
+                        I give it very strong recommendation.
+                        I plan to continue using the text and want to do an online version.”
+                        </p>
+                        <footer>
+                          Clint Williford, <cite title="Source Title">University of Mississippi</cite>
+                        </footer>
+                      </blockquote>
+                    </CardBody>
+                  </Card>
+      </Col>
+    </Row>
     <Row>
     <Col className="text-center ml-auto mr-auto" md = "2">
       <div className="send-button">
