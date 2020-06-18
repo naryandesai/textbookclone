@@ -69,7 +69,7 @@ function Bioprocess() {
     </TabPane>
     <Row>
       <Col className="ml-auto mr-auto text-center" md="8">
-        <h4 className="title">Retail Price: $95</h4>
+        <h4 className="title">Retail Price: $95.00</h4>
         <h3 align="center" className="title">Key Features</h3>
       </Col>
       <Col className="ml-auto mr-auto text-center" md="8">
