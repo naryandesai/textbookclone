@@ -16,8 +16,34 @@ import {
   Container,
   Row
 } from "reactstrap";
+import  CognitoAuth  from "../../cognito/index.js";
 
 // core components
+
+function register() {
+  var email = document.getElementById("email").value
+  var login = document.getElementById("login").value
+  var password = document.getElementById("password").value
+  console.log(email, login, password)
+  CognitoAuth.signup(login, email, password, e => console.log(e));
+  document.getElementById("confirmation").style.visibility = "visible";
+  document.getElementById("confirmationbutton").style.visibility = "visible";
+}
+
+function status_confirmation(e) {
+  if(!e){
+  document.getElementById("confstatus").innerHTML = "Confirmed!"}
+  else{
+  document.getElementById("confstatus").innerHTML = JSON.stringify(e)}
+}
+
+function confirm() {
+  var confirmation = document.getElementById("confirmation").value
+  var login = document.getElementById("login").value
+  console.log(confirmation, login)
+  CognitoAuth.confirmRegistration(login, confirmation, e => status_confirmation(e));
+
+}
 
 function SignUp() {
   const [firstFocus, setFirstFocus] = React.useState(false);
@@ -43,31 +69,7 @@ function SignUp() {
                     Sign Up
                   </CardTitle>
                   <div className="social-line">
-                    <Button
-                      className="btn-neutral btn-icon btn-round"
-                      color="facebook"
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                    >
-                      <i className="fab fa-facebook-square"></i>
-                    </Button>
-                    <Button
-                      className="btn-neutral btn-icon btn-round"
-                      color="twitter"
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                      size="lg"
-                    >
-                      <i className="fab fa-twitter"></i>
-                    </Button>
-                    <Button
-                      className="btn-neutral btn-icon btn-round"
-                      color="google"
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                    >
-                      <i className="fab fa-google-plus"></i>
-                    </Button>
+
                   </div>
                 </CardHeader>
                 <CardBody>
@@ -82,7 +84,8 @@ function SignUp() {
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input
-                      placeholder="First Name..."
+                      placeholder="Login..."
+                      id="login"
                       type="text"
                       onFocus={() => setFirstFocus(true)}
                       onBlur={() => setFirstFocus(false)}
@@ -99,8 +102,9 @@ function SignUp() {
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input
-                      placeholder="Last Name..."
-                      type="text"
+                      placeholder="Password..."
+                      type="password"
+                      id="password"
                       onFocus={() => setLastFocus(true)}
                       onBlur={() => setLastFocus(false)}
                     ></Input>
@@ -118,6 +122,7 @@ function SignUp() {
                     <Input
                       placeholder="Email..."
                       type="text"
+                      id="email"
                       onFocus={() => setEmailFocus(true)}
                       onBlur={() => setEmailFocus(false)}
                     ></Input>
@@ -127,12 +132,34 @@ function SignUp() {
                   <Button
                     className="btn-neutral btn-round"
                     color="info"
-                    href="#pablo"
-                    onClick={e => e.preventDefault()}
+                    onClick={e => register()}
                     size="lg"
                   >
                     Get Started
                   </Button>
+                  <Input
+                      placeholder="Confirmation code..."
+                      type="text"
+                      style={{
+                        visibility: "hidden"
+                      }}
+                      id="confirmation"
+                      onFocus={() => setEmailFocus(true)}
+                      onBlur={() => setEmailFocus(false)}
+                    ></Input>
+                  <Button
+                    className="btn-neutral btn-round"
+                    id="confirmationbutton"
+                    color="info"
+                      style={{
+                        visibility: "hidden"
+                      }}
+                    onClick={e => confirm()}
+                    size="lg"
+                  >
+                    Confirm account
+                  </Button>
+                  <div id="confstatus"> </div>
                 </CardFooter>
               </Form>
             </Card>

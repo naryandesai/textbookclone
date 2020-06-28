@@ -15,12 +15,33 @@ import {
   Container,
   Col
 } from "reactstrap";
+import  CognitoAuth  from "../../cognito/index.js";
 
 // core components
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import TransparentFooter from "components/Footers/TransparentFooter.js";
 
+function toRoot() {
+  console.log("to root")
+  window.location.href ="/"
+}
+
+
+function errorLog(e) {
+  document.getElementById("errorMsg").innerHTML = JSON.stringify(e)
+
+}
+
+function signin() {
+  var login = document.getElementById("logintext").value
+  var password = document.getElementById("password").value
+  console.log(login, password)
+  CognitoAuth.authenticate(login, password, e => toRoot(),  e => errorLog(e));
+
+}
+
 function LoginPage() {
+    console.log(CognitoAuth)
   const [firstFocus, setFirstFocus] = React.useState(false);
   const [lastFocus, setLastFocus] = React.useState(false);
   React.useEffect(() => {
@@ -72,6 +93,7 @@ function LoginPage() {
                       <Input
                         placeholder="Username..."
                         type="text"
+                        id="logintext"
                         onFocus={() => setFirstFocus(true)}
                         onBlur={() => setFirstFocus(false)}
                       ></Input>
@@ -89,7 +111,8 @@ function LoginPage() {
                       </InputGroupAddon>
                       <Input
                         placeholder="Password..."
-                        type="text"
+                        type="password"
+                        id="password"
                         onFocus={() => setLastFocus(true)}
                         onBlur={() => setLastFocus(false)}
                       ></Input>
@@ -100,8 +123,7 @@ function LoginPage() {
                       block
                       className="btn-round"
                       color="info"
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
+                      onClick={e => signin()}
                       size="lg"
                     >
                       Login
@@ -110,12 +132,13 @@ function LoginPage() {
                       <h6>
                         <a
                           className="link"
-                          href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          href="#/sign-up-page"
                         >
                           Create Account
                         </a>
                       </h6>
+                    </div>
+                    <div id = "errorMsg">
                     </div>
                     <div className="pull-right">
                       <h6>
