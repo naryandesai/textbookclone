@@ -13,11 +13,14 @@ import {
   Row,
   Col
 } from "reactstrap";
+import  CognitoAuth  from "cognito/index.js";
 
 // core components
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import LandingPageHeader from "components/Headers/LandingPageHeader.js";
 import DefaultFooter from "components/Footers/DefaultFooter.js";
+
+
 
 function LandingPage() {
   const [firstFocus, setFirstFocus] = React.useState(false);

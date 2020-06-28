@@ -15,10 +15,42 @@ import {
   Container,
   UncontrolledTooltip
 } from "reactstrap";
+import  CognitoAuth  from "cognito/index.js";
+function getName() {
+  try {
+    return (CognitoAuth.getCurrentUser().username)
+  }
+  catch(err) {
+    return "login"
+  }
+}
 
+function loggedIn() {
+  try {
+    var username = (CognitoAuth.getCurrentUser().username)
+    console.log("logged in as " + username)
+    return true
+  }
+  catch(err) {
+    return false
+  }
+}
+
+function logout() {
+  CognitoAuth.logout()
+}
 function ExamplesNavbar() {
   const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
   const [collapseOpen, setCollapseOpen] = React.useState(false);
+  var usrname = (getName())
+  if(loggedIn()) {
+  var logoutButton = <NavLink id="tologin" onClick={e=>logout()} tag={Link}>
+                Log Out
+              </NavLink>
+  } else {
+    var logoutButton = <div></div>
+  }
+  console.log(logoutButton)
   React.useEffect(() => {
     const updateNavbarColor = () => {
       if (
@@ -90,9 +122,16 @@ function ExamplesNavbar() {
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink to="login-page" tag={Link}>
-                Login
+              <NavLink id="tologin" to="login-page" tag={Link}>
+                {usrname}
               </NavLink>
+              <div id="login" >
+              </div>
+            </NavItem>
+            <NavItem>
+            {logoutButton}
+              <div id="login" >
+              </div>
             </NavItem>
               <NavItem>
                 <NavLink to="#" tag={Link}>

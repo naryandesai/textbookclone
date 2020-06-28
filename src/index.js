@@ -35,6 +35,7 @@ import Matlab from "views/examples/matlab.js";
 import Comp from "views/examples/comp.js";
 import Bioprocess from "views/examples/bio.js";
 import Studentreader from "views/examples/pdf.js";
+import SignUp from "views/index-sections/SignUp.js";
 
 ReactDOM.render(
   <HashRouter>
@@ -70,6 +71,7 @@ ReactDOM.render(
           render={props => <ProfilePage {...props} />}
         />
         <Route path="/login-page" render={props => <LoginPage {...props} />} />
+        <Route path="/sign-up-page" render={props => <SignUp {...props} />} />
 
         <Redirect to="/index" />
         <Redirect from="/" to="/login-page" />
