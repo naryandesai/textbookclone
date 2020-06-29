@@ -134,7 +134,7 @@ function ExamplesNavbar() {
               </div>
             </NavItem>
               <NavItem>
-                <NavLink to="#" tag={Link}>
+                <NavLink to="/profile-page" tag={Link}>
                   Textbooks
                 </NavLink>
               </NavItem>
