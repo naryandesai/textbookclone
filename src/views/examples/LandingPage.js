@@ -27,7 +27,6 @@ function goToLogin(err, authenticated) {
 function LandingPage() {
   const [firstFocus, setFirstFocus] = React.useState(false);
   const [lastFocus, setLastFocus] = React.useState(false);
-  console.log(CognitoAuth.isAuthenticated(goToLogin))
   React.useEffect(() => {
     document.body.classList.add("landing-page");
     document.body.classList.add("sidebar-collapse");
