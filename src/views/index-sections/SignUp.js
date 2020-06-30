@@ -30,6 +30,13 @@ function register() {
   document.getElementById("confirmationbutton").style.visibility = "visible";
 }
 
+function reg_status(e) {
+  if(!e){
+  document.getElementById("regstatus").innerHTML = "Confirmation email sent!"}
+  else{
+  document.getElementById("regstatus").innerHTML = JSON.stringify(e)}
+}
+
 function status_confirmation(e) {
   if(!e){
   document.getElementById("confstatus").innerHTML = "Confirmed!"}
@@ -137,6 +144,8 @@ function SignUp() {
                   >
                     Get Started
                   </Button>
+                  <div id="regstatus"> </div>
+
                   <Input
                       placeholder="Confirmation code..."
                       type="text"
