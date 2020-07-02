@@ -122,7 +122,7 @@ function ExamplesNavbar() {
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink id="tologin" to="login-page" tag={Link}>
+              <NavLink id="tologin" to="profile-page" tag={Link}>
                 {usrname}
               </NavLink>
               <div id="login" >

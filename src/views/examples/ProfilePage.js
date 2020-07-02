@@ -14,25 +14,25 @@ import {
   UncontrolledTooltip
 } from "reactstrap";
 import  CognitoAuth  from "cognito/index.js";
+import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 
 // core components
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import ProfilePageHeader from "components/Headers/ProfilePageHeader.js";
 import DefaultFooter from "components/Footers/DefaultFooter.js";
 function goToLogin(err, authenticated) {
-  console.log(err, authenticated)
-  if(!authenticated) {
-    window.location = "/#/login-page"
-  }
+  if(!authenticated)
+  window.location = "/";
 }
 
 function ProfilePage() {
   const [pills, setPills] = React.useState("2");
-  console.log(CognitoAuth.isAuthenticated(goToLogin))
 
   React.useEffect(() => {
     document.body.classList.add("profile-page");
     document.body.classList.add("sidebar-collapse");
+      console.log(CognitoAuth.isAuthenticated(goToLogin))
+
     document.documentElement.classList.remove("nav-open");
     return function cleanup() {
       document.body.classList.remove("profile-page");
@@ -151,4 +151,8 @@ function ProfilePage() {
   );
 }
 
-export default ProfilePage;
+export default withAuthenticator(ProfilePage, true);
+
+
+
+
