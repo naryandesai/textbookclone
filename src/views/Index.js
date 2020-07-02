@@ -19,7 +19,7 @@ import  CognitoAuth  from "cognito/index.js";
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import LandingPageHeader from "components/Headers/LandingPageHeader.js";
 import DefaultFooter from "components/Footers/DefaultFooter.js";
-
+import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 function goToLogin(err, authenticated) {
   if(!authenticated) {
     window.location = "/#/login-page"
@@ -93,4 +93,8 @@ function LandingPage() {
   );
 }
 
+
 export default LandingPage;
+
+
+

@@ -41,6 +41,10 @@ ReactDOM.render(
   <HashRouter>
     <Switch>
       <Switch>
+        <Route
+          path="/pdf-file"
+          render={props => <Studentreader {...props} />}
+        />
         <Route path="/index" render={props => <Index {...props} />} />
         <Route
           path="/nucleo-icons"

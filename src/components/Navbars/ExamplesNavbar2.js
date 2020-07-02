@@ -90,7 +90,7 @@ function ExamplesNavbar2() {
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink to="login-page" tag={Link}>
+              <NavLink to="profile-page" tag={Link}>
                 Logout
               </NavLink>
             </NavItem>
