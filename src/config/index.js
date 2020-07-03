@@ -14,10 +14,10 @@ const awsmobile = {
     region: "us-east-1",
 
     // Amazon Cognito User Pool ID
-    userPoolId: "us-east-1_jdETcc6Zw",
+    userPoolId: "us-east-1:083124225867",
 
     // Amazon Cognito Web Client ID (26-char alphanumeric string)
-    userPoolWebClientId: "673k7kbuq3pnmomu14lk4e78ns"
+    userPoolWebClientId: "2a5qr42eeu4h55mk7ul6bphn2b"
   }
 };
 
