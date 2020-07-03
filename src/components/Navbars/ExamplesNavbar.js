@@ -18,6 +18,7 @@ import {
 import  CognitoAuth  from "cognito/index.js";
 function getName() {
   try {
+    console.log(CognitoAuth.getCurrentUser())
     return (CognitoAuth.getCurrentUser().username)
   }
   catch(err) {
@@ -44,9 +45,9 @@ function ExamplesNavbar() {
   const [collapseOpen, setCollapseOpen] = React.useState(false);
   var usrname = (getName())
   if(loggedIn()) {
-  var logoutButton = <NavLink id="tologin" onClick={e=>logout()} tag={Link}>
+  var logoutButton = <a id="tologin" href="landing-page" onClick={e=>logout()} tag={Link}>
                 Log Out
-              </NavLink>
+              </a>
   } else {
     var logoutButton = <div></div>
   }
@@ -117,14 +118,14 @@ function ExamplesNavbar() {
           >
             <Nav navbar>
             <NavItem>
-              <NavLink to="landing-page" tag={Link}>
+              <a href="/" tag={Link}>
                 Home
-              </NavLink>
+              </a>
             </NavItem>
             <NavItem>
-              <NavLink id="tologin" to="profile-page" tag={Link}>
+              <a id="tologin" href="/#/profile-page" tag={Link}>
                 {usrname}
-              </NavLink>
+              </a>
               <div id="login" >
               </div>
             </NavItem>
@@ -134,32 +135,32 @@ function ExamplesNavbar() {
               </div>
             </NavItem>
               <NavItem>
-                <NavLink to="/profile-page" tag={Link}>
+                <a href="/#/profile-page" tag={Link}>
                   Textbooks
-                </NavLink>
+                </a>
               </NavItem>
               <NavItem>
-                <NavLink
+                <a
                   href="https://www.facebook.com/"
                   target="_blank"
                   id="facebook-tooltip"
                 >
                   <i className="fab fa-facebook-square"></i>
                   <p className="d-lg-none d-xl-none">Facebook</p>
-                </NavLink>
+                </a>
                 <UncontrolledTooltip target="#facebook-tooltip">
                   Like us on Facebook
                 </UncontrolledTooltip>
               </NavItem>
               <NavItem>
-                <NavLink
+                <a
                   href="https://www.linkedin.com/"
                   target="_blank"
                   id="instagram-tooltip"
                 >
                   <i className="fab fa-linkedin"></i>
                   <p className="d-lg-none d-xl-none">Instagram</p>
-                </NavLink>
+                </a>
                 <UncontrolledTooltip target="#instagram-tooltip">
                   Follow us on LinkedIn
                 </UncontrolledTooltip>

@@ -27,11 +27,10 @@ function goToLogin(err, authenticated) {
 
 function ProfilePage() {
   const [pills, setPills] = React.useState("2");
-
+  console.log('wtf')
   React.useEffect(() => {
     document.body.classList.add("profile-page");
     document.body.classList.add("sidebar-collapse");
-      console.log(CognitoAuth.isAuthenticated(goToLogin))
 
     document.documentElement.classList.remove("nav-open");
     return function cleanup() {
