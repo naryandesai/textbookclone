@@ -11,9 +11,7 @@ function render(myState) {
     var canvas = document.createElement('canvas');
     container.appendChild(canvas);
     canvas.id     = "pdf_renderer";
-    document.body.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-    });
+
     var ctx = canvas.getContext('2d');
     myState.pdf.getPage(myState.currentPage).then((page) => {
         var viewport = page.getViewport({scale:myState.zoom});
@@ -21,12 +19,109 @@ function render(myState) {
         canvas.height = viewport.height;
         page.render({
             canvasContext: ctx,
-            viewport: viewport
+            viewport: viewport,
         });
+        setupAnnotations(page, viewport, canvas, ctx)
     });
 }
 
+  function setupAnnotations(page, viewport, canvas, ctx) {
+    var canvasOffset = canvas.getBoundingClientRect();
+    var promise = page.getAnnotations().then(function (annotationsData) {
+      viewport = viewport.clone({
+        dontFlip: true
+      });
+      for (var i = 0; i < annotationsData.length; i++) {
+        var annotation = annotationsData[i];
+        console.log('url' in annotation)
+        if (!annotation || !('url' in annotation)) {
+          continue;
+        }
+        console.log(annotation)
 
+
+        drawHyperLink(canvas, ctx, annotation)
+        console.log('appended ')
+
+        var linkText = "Authorcode";
+        var linkURL = "http://www.authorcode.com";
+        var linkX = 50;
+        var linkY = 25;
+        var linkHeight = 600;
+        var linkWidth;
+        var isLink = true;
+
+
+        function drawHyperLink(canvas, ctx, annotation) {
+            // check if supported
+            if (canvas.getContext) {
+                ctx.font = linkHeight + 'px sans-serif';
+                ctx.fillStyle = "#0000ff";
+                ctx.fillText(linkText, linkX, linkY);
+                linkWidth = ctx.measureText(linkText).width;
+                ctx.beginPath();
+                ctx.rect(annotation.rect[0], annotation.rect[1], annotation.rect[2] - annotation.rect[0], annotation.rect[3] - annotation.rect[1])
+                ctx.stroke();
+                canvas.addEventListener('mousedown', function(e) {
+                    getCursorPosition(canvas, e, annotation.rect, annotation.url)
+                })
+
+                canvas.addEventListener("mousemove", (e) => CanvasMouseMove(e, annotation.rect), false);
+                canvas.addEventListener("click", (e) => Link_click(e, annotation.url, ), false);
+
+            }
+        }
+
+        function getCursorPosition(canvas, event, rectLink, url) {
+            const rect = canvas.getBoundingClientRect()
+            const x = event.clientX - rect.left
+            const y = event.clientY - rect.top
+            console.log("x: " + x + " y: " + y)
+            var linkX, linkY, linkWidth, linkHeight;
+            linkX = rectLink[0]
+            linkY = rectLink[1]
+            linkWidth = rectLink[2] - rectLink[0]
+            linkHeight = rectLink[3] - rectLink[1]
+            console.log(rectLink)
+            console.log("x: " + x + " y: " + y, linkX, linkY, linkWidth, linkHeight)
+            if (x >= linkX && x <= (linkX + linkWidth)
+                    && y <= linkY && y >= (linkY - linkHeight)) {
+                document.body.style.cursor = "pointer";
+                isLink = true;
+            }
+            else {
+                document.body.style.cursor = "";
+                isLink = false;
+            }
+        }
+
+        function CanvasMouseMove(e, rect) {
+            var x, y, linkWidth, linkHeight;
+            x = rect[0]
+            y = rect[1]
+            linkWidth = rect[2] - rect[0]
+            linkHeight = rect[3] - rect[1]
+            if (x >= linkX && x <= (linkX + linkWidth)
+                    && y <= linkY && y >= (linkY - linkHeight)) {
+                document.body.style.cursor = "pointer";
+                isLink = true;
+            }
+            else {
+                document.body.style.cursor = "";
+                isLink = false;
+            }
+        }
+
+        function Link_click(e, url) {
+            if (isLink) {
+                window.location = url;
+            }
+        }
+        break;
+      }
+    });
+    return promise;
+  }
 
 function Studentreader() {
   const [numPages, setNumPages] = useState(null);
@@ -38,7 +133,7 @@ function Studentreader() {
     }
     // more code here
     pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`
-    const loadingTask = pdfjsLib.getDocument('http://www.africau.edu/images/default/sample.pdf');
+    const loadingTask = pdfjsLib.getDocument('http://www.pdf995.com/samples/pdf.pdf');
     console.log('wtf')
     loadingTask.promise.then(function(pdf) {
       myState.pdf = pdf;
@@ -101,14 +196,16 @@ function Studentreader() {
       render(myState);
     })
     var canvasStyle = {
-    display: '0 auto'
+    display: '0 auto',
+          backgroundColor: '#FFFFFF',
+
     }
     var style =  {
       position: 'fixed',
       left: 0,
       bottom: 0,
       width: '100%',
-      backgroundColor: 'black',
+      backgroundColor: '#FFFFFF',
       color: 'white',
       textAlign: 'center'
     }
