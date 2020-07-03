@@ -133,7 +133,7 @@ function Studentreader() {
     }
     // more code here
     pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`
-    const loadingTask = pdfjsLib.getDocument('http://www.pdf995.com/samples/pdf.pdf');
+    const loadingTask = pdfjsLib.getDocument('https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf');
     console.log('wtf')
     loadingTask.promise.then(function(pdf) {
       myState.pdf = pdf;
