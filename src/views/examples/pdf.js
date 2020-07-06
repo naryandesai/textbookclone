@@ -12,14 +12,14 @@ var myState = {
 
 async function goToText() {
     var searchText = document.getElementById("searchtext").value
-    var currentPage = document.getElementById("current_page").value || document.getElementById("current_page").getAttribute("placeholder");
+    var currentPage = myState.currentPage
     if(searchText) {
         console.log(searchText, currentPage)
     }
     var maxPages = myState.pdf._pdfInfo.numPages;
     var countPromises = []; // collecting all page promises
     var pageNum = currentPage;
-    for (var j = 1; j <= maxPages; j++) {
+    for (var j = parseInt(currentPage) + 1; j <= maxPages; j++) {
       var page = await myState.pdf.getPage(j);
 
       var txt = "";
@@ -32,6 +32,7 @@ async function goToText() {
       }
     }
     myState.currentPage = pageNum
+    document.getElementById("current_page").value = pageNum
     render(myState)
 }
 
@@ -225,17 +226,13 @@ function Studentreader() {
             <canvas id="pdf_renderer" ></canvas>
         </div>
             <div id="navigation_controls" style={style}>
-            <button id="go_previous">Previous</button>
+            <button className="buttono button2" id="go_previous">Previous</button>
             <input id="current_page" placeholder={1} type="number"/>
-            <button id="go_next">Next</button>
-             <div >
-            <div id="zoom_controls">
-            <button id="zoom_in">+</button>
-            <button id="zoom_out">-</button> <br/>
+            <button className="buttono button2" id="go_next">Next</button>
+            <button className="buttono button2" id="zoom_in">Zoom In</button>
+            <button className="buttono button2" id="zoom_out">Zoom out</button>
             <input id='searchtext' type="text" placeholder="Go to text"></input>
-            <button id="zoom_in" onClick={goToText}>Go</button>
-            </div>
-            </div>
+            <button className="buttono button2" id="zoom_in" onClick={goToText}>Go</button>
         </div>
       </div>
       );
