@@ -140,8 +140,9 @@ function Studentreader() {
   const [pageNumber, setPageNumber] = useState(1);
     // more code here
     pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`
-    const loadingTask = pdfjsLib.getDocument('http://www.pdf995.com/samples/pdf.pdf');
+    const loadingTask = pdfjsLib.getDocument('https://arek-kravitz-bucket.s3.amazonaws.com/sample.pdf');
     loadingTask.promise.then(function(pdf) {
+      console.log(pdf)
       myState.pdf = pdf;
         document.getElementById('zoom_in')
         .addEventListener('click', (e) => {
