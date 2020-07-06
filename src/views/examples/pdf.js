@@ -4,15 +4,54 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import "views/RiggsPDF.pdf";
 import * as pdfjsLib from 'pdfjs-dist';
 
+var myState = {
+    pdf: null,
+    currentPage: 1,
+    zoom: 1
+}
+
+async function goToText() {
+    var searchText = document.getElementById("searchtext").value
+    var currentPage = document.getElementById("current_page").value || document.getElementById("current_page").getAttribute("placeholder");
+    if(searchText) {
+        console.log(searchText, currentPage)
+    }
+    var maxPages = myState.pdf._pdfInfo.numPages;
+    var countPromises = []; // collecting all page promises
+    var pageNum = currentPage;
+    for (var j = 1; j <= maxPages; j++) {
+      var page = await myState.pdf.getPage(j);
+
+      var txt = "";
+      var textContent = await page.getTextContent();
+      textContent = textContent.items.map(function (s) { return s.str; }).join(''); // value page text
+      if (textContent.includes(searchText)) {
+        console.log(textContent)
+        pageNum = j;
+        break;
+      }
+    }
+    myState.currentPage = pageNum
+    render(myState)
+}
+
 function render(myState) {
-    console.log(myState.zoom)
     document.getElementById("pdf_renderer").remove();
     var container = document.getElementById("canvas_container");
     var canvas = document.createElement('canvas');
-    container.appendChild(canvas);
+    var canvasStyle = {
+    display: '0 auto',
+          backgroundColor: '#FFFFFF',
+          position: 'absolute'
+
+    }
     canvas.id     = "pdf_renderer";
+    canvas.style.position = 'relative'
+    container.appendChild(canvas);
+    canvas.addEventListener("mousemove", (e) => {document.body.style.cursor  = 'auto'}, false);
 
     var ctx = canvas.getContext('2d');
+
     myState.pdf.getPage(myState.currentPage).then((page) => {
         var viewport = page.getViewport({scale:myState.zoom});
         canvas.width = viewport.width;
@@ -21,11 +60,11 @@ function render(myState) {
             canvasContext: ctx,
             viewport: viewport,
         });
-        setupAnnotations(page, viewport, canvas, ctx)
+        setupAnnotations(page, viewport, canvas, ctx, myState.zoom)
     });
 }
 
-  function setupAnnotations(page, viewport, canvas, ctx) {
+  function setupAnnotations(page, viewport, canvas, ctx, zoom) {
     var canvasOffset = canvas.getBoundingClientRect();
     var promise = page.getAnnotations().then(function (annotationsData) {
       viewport = viewport.clone({
@@ -33,91 +72,64 @@ function render(myState) {
       });
       for (var i = 0; i < annotationsData.length; i++) {
         var annotation = annotationsData[i];
-        console.log('url' in annotation)
         if (!annotation || !('url' in annotation)) {
           continue;
         }
-        console.log(annotation)
 
-
-        drawHyperLink(canvas, ctx, annotation)
-        console.log('appended ')
+        drawHyperLink(canvas, ctx, annotation, zoom, page.view)
 
         var linkText = "Authorcode";
         var linkURL = "http://www.authorcode.com";
         var linkX = 50;
         var linkY = 25;
-        var linkHeight = 600;
         var linkWidth;
         var isLink = true;
 
 
-        function drawHyperLink(canvas, ctx, annotation) {
+        function drawHyperLink(canvas, ctx, annotation, zoom, viewport) {
             // check if supported
             if (canvas.getContext) {
-                ctx.font = linkHeight + 'px sans-serif';
+                if('url' in annotation) {
+                ctx.font = 'px sans-serif';
                 ctx.fillStyle = "#0000ff";
                 ctx.fillText(linkText, linkX, linkY);
                 linkWidth = ctx.measureText(linkText).width;
-                ctx.beginPath();
-                ctx.rect(annotation.rect[0], annotation.rect[1], annotation.rect[2] - annotation.rect[0], annotation.rect[3] - annotation.rect[1])
-                ctx.stroke();
-                canvas.addEventListener('mousedown', function(e) {
-                    getCursorPosition(canvas, e, annotation.rect, annotation.url)
-                })
-
-                canvas.addEventListener("mousemove", (e) => CanvasMouseMove(e, annotation.rect), false);
-                canvas.addEventListener("click", (e) => Link_click(e, annotation.url, ), false);
+                canvas.addEventListener("click", (e) => getCursorPosition(ctx.canvas, e, annotation.rect, annotation.url, zoom, viewport), false);
+                canvas.addEventListener("mousemove", (e) => setCursor(ctx.canvas, e, annotation.rect, annotation.url, zoom, viewport), false);
+                }
 
             }
         }
 
-        function getCursorPosition(canvas, event, rectLink, url) {
+        function getCursorPosition(canvas, event, rectLink, url, zoom, viewport) {
             const rect = canvas.getBoundingClientRect()
             const x = event.clientX - rect.left
             const y = event.clientY - rect.top
-            console.log("x: " + x + " y: " + y)
             var linkX, linkY, linkWidth, linkHeight;
-            linkX = rectLink[0]
-            linkY = rectLink[1]
-            linkWidth = rectLink[2] - rectLink[0]
-            linkHeight = rectLink[3] - rectLink[1]
-            console.log(rectLink)
-            console.log("x: " + x + " y: " + y, linkX, linkY, linkWidth, linkHeight)
+            linkX = rectLink[0] * zoom
+            linkHeight = (rectLink[3] - rectLink[1]) * zoom
+            linkY = ((viewport[3] - rectLink[1])) * zoom - linkHeight
+            linkWidth = (rectLink[2] - rectLink[0]) * zoom
             if (x >= linkX && x <= (linkX + linkWidth)
-                    && y <= linkY && y >= (linkY - linkHeight)) {
-                document.body.style.cursor = "pointer";
-                isLink = true;
-            }
-            else {
-                document.body.style.cursor = "";
-                isLink = false;
-            }
-        }
-
-        function CanvasMouseMove(e, rect) {
-            var x, y, linkWidth, linkHeight;
-            x = rect[0]
-            y = rect[1]
-            linkWidth = rect[2] - rect[0]
-            linkHeight = rect[3] - rect[1]
-            if (x >= linkX && x <= (linkX + linkWidth)
-                    && y <= linkY && y >= (linkY - linkHeight)) {
-                document.body.style.cursor = "pointer";
-                isLink = true;
-            }
-            else {
-                document.body.style.cursor = "";
-                isLink = false;
-            }
-        }
-
-        function Link_click(e, url) {
-            if (isLink) {
+                    && y >= linkY && y <= (linkY + linkHeight)) {
                 window.location = url;
             }
         }
-        break;
+
+        function setCursor(canvas, event, rectLink, url, zoom, viewport) {
+            const rect = canvas.getBoundingClientRect()
+            const x = event.clientX - rect.left
+            const y = event.clientY - rect.top
+            var linkX, linkY, linkWidth, linkHeight;
+            linkX = rectLink[0] * zoom
+            linkHeight = (rectLink[3] - rectLink[1]) * zoom
+            linkY = ((viewport[3] - rectLink[1])) * zoom - linkHeight
+            linkWidth = (rectLink[2] - rectLink[0]) * zoom
+            if (x >= linkX && x <= (linkX + linkWidth)
+                    && y >= linkY && y <= (linkY + linkHeight)) {
+                document.body.style.cursor = 'pointer'
+            }
+        }
       }
     });
     return promise;
@@ -126,15 +138,9 @@ function render(myState) {
 function Studentreader() {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
-    var myState = {
-        pdf: null,
-        currentPage: 1,
-        zoom: 1
-    }
     // more code here
     pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`
-    const loadingTask = pdfjsLib.getDocument('https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf');
-    console.log('wtf')
+    const loadingTask = pdfjsLib.getDocument('http://www.pdf995.com/samples/pdf.pdf');
     loadingTask.promise.then(function(pdf) {
       myState.pdf = pdf;
         document.getElementById('zoom_in')
@@ -197,7 +203,8 @@ function Studentreader() {
     })
     var canvasStyle = {
     display: '0 auto',
-          backgroundColor: '#FFFFFF',
+          backgroundColor: '#2CA8FF',
+          position: 'relative'
 
     }
     var style =  {
@@ -205,7 +212,7 @@ function Studentreader() {
       left: 0,
       bottom: 0,
       width: '100%',
-      backgroundColor: '#FFFFFF',
+      backgroundColor: '#2CA8FF',
       color: 'white',
       textAlign: 'center'
     }
@@ -218,12 +225,14 @@ function Studentreader() {
         </div>
             <div id="navigation_controls" style={style}>
             <button id="go_previous">Previous</button>
-            <input id="current_page" type="number"/>
+            <input id="current_page" placeholder={1} type="number"/>
             <button id="go_next">Next</button>
              <div >
             <div id="zoom_controls">
             <button id="zoom_in">+</button>
-            <button id="zoom_out">-</button>
+            <button id="zoom_out">-</button> <br/>
+            <input id='searchtext' type="text" placeholder="Go to text"></input>
+            <button id="zoom_in" onClick={goToText}>Go</button>
             </div>
             </div>
         </div>
