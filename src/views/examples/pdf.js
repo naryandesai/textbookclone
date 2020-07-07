@@ -12,6 +12,7 @@ var myState = {
 
 async function goToText() {
     var searchText = document.getElementById("searchtext").value
+    searchText.replace(/\s+/g, '');
     var currentPage = myState.currentPage
     if(searchText) {
         console.log(searchText, currentPage)
@@ -73,7 +74,8 @@ function render(myState) {
       });
       for (var i = 0; i < annotationsData.length; i++) {
         var annotation = annotationsData[i];
-        if (!annotation || !('url' in annotation)) {
+        console.log(annotation)
+        if (!annotation || !('Link' == annotation.subtype)) {
           continue;
         }
 
@@ -90,19 +92,19 @@ function render(myState) {
         function drawHyperLink(canvas, ctx, annotation, zoom, viewport) {
             // check if supported
             if (canvas.getContext) {
-                if('url' in annotation) {
                 ctx.font = 'px sans-serif';
                 ctx.fillStyle = "#0000ff";
                 ctx.fillText(linkText, linkX, linkY);
                 linkWidth = ctx.measureText(linkText).width;
-                canvas.addEventListener("click", (e) => getCursorPosition(ctx.canvas, e, annotation.rect, annotation.url, zoom, viewport), false);
+                //ctx.beginPath();
+                //ctx.rect(annotation.rect[0], annotation.rect[1], annotation.rect[2] - annotation.rect[0], annotation.rect[3] - annotation.rect[1])
+                //ctx.stroke();
+                canvas.addEventListener("click", (e) => getCursorPosition(ctx.canvas, e, annotation.rect, annotation.url, zoom, viewport, annotation.dest), false);
                 canvas.addEventListener("mousemove", (e) => setCursor(ctx.canvas, e, annotation.rect, annotation.url, zoom, viewport), false);
-                }
-
             }
         }
 
-        function getCursorPosition(canvas, event, rectLink, url, zoom, viewport) {
+        function getCursorPosition(canvas, event, rectLink, url, zoom, viewport, dest) {
             const rect = canvas.getBoundingClientRect()
             const x = event.clientX - rect.left
             const y = event.clientY - rect.top
@@ -113,7 +115,14 @@ function render(myState) {
             linkWidth = (rectLink[2] - rectLink[0]) * zoom
             if (x >= linkX && x <= (linkX + linkWidth)
                     && y >= linkY && y <= (linkY + linkHeight)) {
-                window.location = url;
+                if(dest) {
+                    dest = dest.substring(dest.indexOf('.')+1)
+                    console.log(dest)
+                    document.getElementById("searchtext").value = dest
+                    goToText()
+                }
+                else {
+                window.location = url; }
             }
         }
 
@@ -143,7 +152,7 @@ function Studentreader() {
     pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`
     const loadingTask = pdfjsLib.getDocument('https://arek-kravitz-bucket.s3.amazonaws.com/sample.pdf');
     loadingTask.promise.then(function(pdf) {
-      console.log(pdf)
+      console.log(pdf.getPageLabels().then(e=>console.log(e)))
       myState.pdf = pdf;
         document.getElementById('zoom_in')
         .addEventListener('click', (e) => {
