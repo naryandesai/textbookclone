@@ -23,6 +23,7 @@ async function goToText() {
     if(searchText) {
         console.log(searchText, currentPage)
     }
+    searchText = searchText.toLowerCase()
     var maxPages = myState.pdf._pdfInfo.numPages;
     var countPromises = []; // collecting all page promises
     var pageNum = currentPage;
@@ -31,7 +32,7 @@ async function goToText() {
 
       var txt = "";
       var textContent = await page.getTextContent();
-      textContent = textContent.items.map(function (s) { return s.str; }).join(''); // value page text
+      textContent = textContent.items.map(function (s) { return s.str; }).join('').toLowerCase(); // value page text
       if (textContent.includes(searchText)) {
         console.log(textContent)
         pageNum = j;
