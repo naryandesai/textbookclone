@@ -64,6 +64,8 @@ function render(myState) {
         });
         setupAnnotations(page, viewport, canvas, ctx, myState.zoom)
     });
+
+
 }
 
   function setupAnnotations(page, viewport, canvas, ctx, zoom) {
@@ -151,6 +153,30 @@ function Studentreader() {
     // more code here
     pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`
     const loadingTask = pdfjsLib.getDocument('https://arek-kravitz-bucket.s3.amazonaws.com/sample.pdf');
+
+    function makeThumb(page) {
+      // draw page to fit into 96x96 canvas
+      var vp = page.getViewport({scale:myState.zoom});
+      var canvas = document.createElement("canvas");
+      canvas.width = canvas.height = 96;
+      var scale = Math.min(canvas.width / vp.width, canvas.height / vp.height);
+      return page.render({canvasContext: canvas.getContext("2d"), viewport: page.getViewport({scale:scale})}).promise.then(function () {
+        return canvas;
+      });
+    }
+
+    pdfjsLib.getDocument('https://arek-kravitz-bucket.s3.amazonaws.com/sample.pdf').promise.then(function (doc) {
+      var pages = []; while (pages.length < doc.numPages) pages.push(pages.length + 1);
+      return Promise.all(pages.map(function (num) {
+        // create a div for each page and build a small canvas for it
+        var div = document.getElementById("preview");
+        return doc.getPage(num).then(makeThumb)
+          .then(function (canvas) {
+            div.appendChild(canvas);
+        });
+      }));
+    }).catch(console.error);
+
     loadingTask.promise.then(function(pdf) {
       console.log(pdf.getPageLabels().then(e=>console.log(e)))
       myState.pdf = pdf;
@@ -215,35 +241,80 @@ function Studentreader() {
     var canvasStyle = {
     display: '0 auto',
           backgroundColor: '#2CA8FF',
+                verticalAlign: 'bottom',
+
           position: 'relative'
 
     }
+
+
     var style =  {
-      position: 'fixed',
-      left: 0,
-      bottom: 0,
+      verticalAlign: 'top',
       width: '100%',
       backgroundColor: '#2CA8FF',
       color: 'white',
-      textAlign: 'center'
+      textAlign: 'center',
+        position:'relative',
+        width:'100%',
+        minWidth:'315px'
     }
 
-  return (
+    var buttonsLeft = {
+        position:'absolute',
+        top:'0px',
+        left:'0px',
+        height:'30px',
+        width:'400px',display: 'inline-block',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+    }
 
-      <div id="my_pdf_viewer" >
-        <div id="canvas_container" style={canvasStyle}>
-            <canvas id="pdf_renderer" ></canvas>
-        </div>
-            <div id="navigation_controls" style={style}>
-            <button className="buttono button2" id="go_previous">Previous</button>
-            <input id="current_page" placeholder={1} type="number"/>
-            <button className="buttono button2" id="go_next">Next</button>
-            <button className="buttono button2" id="zoom_in">Zoom In</button>
-            <button className="buttono button2" id="zoom_out">Zoom out</button>
-            <input id='searchtext' type="text" placeholder="Go to text"></input>
-            <button className="buttono button2" id="zoom_in" onClick={goToText}>Go</button>
-        </div>
-      </div>
+
+    var buttonsRight = {
+    position:'absolute',
+    top:'0px',
+    right:'0px',
+    height:'30px',
+    width:'300px',display: 'inline-block',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+    }
+
+    var buttonsCenter = {
+    height:'30px',
+    width:'200px',
+    margin:'0px auto',display: 'inline-block',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+    }
+  return (
+    <div>
+              <div id="my_pdf_viewer" >
+                          <div id="navigation_controls" style={style}>
+                <div style={buttonsLeft}>
+                <button className="buttono button2" id="go_next">Next</button>
+                <button className="buttono button2" id="go_previous">Previous</button>
+                <input id="current_page" placeholder={1} type="number"/>
+                </div>
+
+                <div style={buttonsCenter}>
+                <button className="buttono button2" id="zoom_in">Zoom In</button>
+                <button className="buttono button2" id="zoom_out">Zoom out</button>
+                </div>
+                <div style={buttonsRight}>
+                <input id='searchtext' type="text" placeholder="Go to text"></input>
+                <button className="buttono button2" id="go" onClick={goToText}>Go</button>
+                </div>
+            </div>
+                    <div id="canvas_container" style={canvasStyle}>
+                        <canvas id="pdf_renderer" ></canvas>
+                    </div>
+                    <div id="preview"> </div>
+              </div>
+    </div>
       );
 }
 export default Studentreader;
