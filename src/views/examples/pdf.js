@@ -10,6 +10,12 @@ var myState = {
     zoom: 1
 }
 
+async function goToPage(num) {
+    myState.currentPage = num
+    document.getElementById("current_page").value = num
+    render(myState)
+}
+
 async function goToText() {
     var searchText = document.getElementById("searchtext").value
     searchText.replace(/\s+/g, '');
@@ -154,13 +160,17 @@ function Studentreader() {
     pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`
     const loadingTask = pdfjsLib.getDocument('https://arek-kravitz-bucket.s3.amazonaws.com/sample.pdf');
 
-    function makeThumb(page) {
+    function makeThumb(num, page) {
       // draw page to fit into 96x96 canvas
       var vp = page.getViewport({scale:myState.zoom});
       var canvas = document.createElement("canvas");
       canvas.width = canvas.height = 96;
+      canvas.onclick = function() { goToPage(num); }
       var scale = Math.min(canvas.width / vp.width, canvas.height / vp.height);
+
       return page.render({canvasContext: canvas.getContext("2d"), viewport: page.getViewport({scale:scale})}).promise.then(function () {
+        canvas.getContext("2d").font = "20px Arial";
+        canvas.getContext("2d").fillText(String(num), 10, 20);
         return canvas;
       });
     }
@@ -170,7 +180,7 @@ function Studentreader() {
       return Promise.all(pages.map(function (num) {
         // create a div for each page and build a small canvas for it
         var div = document.getElementById("preview");
-        return doc.getPage(num).then(makeThumb)
+        return doc.getPage(num).then((e) => makeThumb(num, e))
           .then(function (canvas) {
             div.appendChild(canvas);
         });
