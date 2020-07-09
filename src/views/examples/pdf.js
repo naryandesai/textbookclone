@@ -305,8 +305,8 @@ function Studentreader() {
               <div id="my_pdf_viewer" >
                           <div id="navigation_controls" style={style}>
                 <div style={buttonsLeft}>
-                <button className="buttono button2" id="go_next">Next</button>
                 <button className="buttono button2" id="go_previous">Previous</button>
+                <button className="buttono button2" id="go_next">Next</button>
                 <input id="current_page" placeholder={1} type="number"/>
                 </div>
 
