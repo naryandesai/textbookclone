@@ -273,7 +273,7 @@ function Studentreader() {
         position:'absolute',
         top:'0px',
         left:'0px',
-        height:'30px',
+        height:'27px',
         width:'400px',display: 'inline-block',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
@@ -285,7 +285,7 @@ function Studentreader() {
     position:'absolute',
     top:'0px',
     right:'0px',
-    height:'30px',
+    height:'27px',
     width:'300px',display: 'inline-block',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
@@ -293,7 +293,7 @@ function Studentreader() {
     }
 
     var buttonsCenter = {
-    height:'30px',
+    height:'27px',
     width:'200px',
     margin:'0px auto',display: 'inline-block',
         overflow: 'hidden',
