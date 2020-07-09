@@ -282,6 +282,7 @@ function Studentreader() {
     }
 
 
+
     var buttonsRight = {
     position:'absolute',
     top:'0px',
@@ -323,7 +324,7 @@ function Studentreader() {
                     <div id="canvas_container" style={canvasStyle}>
                         <canvas id="pdf_renderer" ></canvas>
                     </div>
-                    <div id="preview"> </div>
+                    <div id="preview" style={{height:"96px", overflowY: 'auto'}}> </div>
               </div>
     </div>
       );
