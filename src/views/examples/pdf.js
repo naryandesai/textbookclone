@@ -3,6 +3,7 @@ import { Document, Page } from 'react-pdf';
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "views/RiggsPDF.pdf";
 import * as pdfjsLib from 'pdfjs-dist';
+import './pdf.css';
 
 var myState = {
     pdf: null,
@@ -274,20 +275,18 @@ function Studentreader() {
         position:'absolute',
         top:'0px',
         left:'0px',
-        height:'27px',
+        height:'40px',
         width:'400px',display: 'inline-block',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
     }
 
-
-
     var buttonsRight = {
     position:'absolute',
     top:'0px',
     right:'0px',
-    height:'27px',
+    height:'40px',
     width:'300px',display: 'inline-block',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
@@ -295,7 +294,7 @@ function Studentreader() {
     }
 
     var buttonsCenter = {
-    height:'27px',
+    height:'40px',
     width:'200px',
     margin:'0px auto',display: 'inline-block',
         overflow: 'hidden',
@@ -307,18 +306,18 @@ function Studentreader() {
               <div id="my_pdf_viewer" >
                           <div id="navigation_controls" style={style}>
                 <div style={buttonsLeft}>
-                <button className="buttono button2" id="go_previous">Previous</button>
-                <button className="buttono button2" id="go_next">Next</button>
-                <input id="current_page" placeholder={1} type="number"/>
+                <button className="buttono pageDown" id="go_previous"></button>
+                <button className="buttono pageUp" id="go_next"></button>
+                <input id="current_page" className="toolbarField pageNumber" placeholder={1} type="number"/>
                 </div>
 
                 <div style={buttonsCenter}>
-                <button className="buttono button2" id="zoom_in">Zoom In</button>
-                <button className="buttono button2" id="zoom_out">Zoom out</button>
+                <button className="buttono zoomIn" id="zoom_in"></button>
+                <button className="buttono zoomOut" id="zoom_out"></button>
                 </div>
                 <div style={buttonsRight}>
-                <input id='searchtext' type="text" placeholder="Go to text"></input>
-                <button className="buttono button2" id="go" onClick={goToText}>Go</button>
+                <input id='searchtext' type="text" className="toolbarField" placeholder="Go to text"></input>
+                <button className="buttono search" id="go" onClick={goToText}></button>
                 </div>
             </div>
                     <div id="canvas_container" style={canvasStyle}>
