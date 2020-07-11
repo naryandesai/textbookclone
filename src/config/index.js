@@ -3,9 +3,9 @@ import Amplify from 'aws-amplify';
 export default {
   region: "us-east-1",
 
-  IdentityPoolId: "us-east-1_bLxpeg9Dy",
+  IdentityPoolId: "us-east-1_AnQnT11Qd",
   UserPoolId: "us-east-1:083124225867",
-  ClientId: "7kf72usbiklkest6pq2prqs7q7"
+  ClientId: "gdjne9f3v2hmocg511onno830"
 };
 
 const awsmobile = {
@@ -14,10 +14,10 @@ const awsmobile = {
     region: "us-east-1",
 
     // Amazon Cognito User Pool ID
-    userPoolId: "us-east-1_bLxpeg9Dy",
+    userPoolId: "us-east-1_AnQnT11Qd",
 
     // Amazon Cognito Web Client ID (26-char alphanumeric string)
-    userPoolWebClientId: "7kf72usbiklkest6pq2prqs7q7"
+    userPoolWebClientId: "gdjne9f3v2hmocg511onno830"
   }
 };
 
