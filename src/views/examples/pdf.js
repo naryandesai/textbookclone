@@ -177,16 +177,17 @@ function Studentreader() {
       });
     }
 
-    pdfjsLib.getDocument('https://arek-kravitz-bucket.s3.amazonaws.com/sample.pdf').promise.then(function (doc) {
-      var pages = []; while (pages.length < doc.numPages) pages.push(pages.length + 1);
-      return Promise.all(pages.map(function (num) {
+    pdfjsLib.getDocument('https://arek-kravitz-bucket.s3.amazonaws.com/sample.pdf').promise.then(async function (doc) {
+      var pages = []; while (pages.length < doc.numPages) {pages.push(pages.length + 1);
         // create a div for each page and build a small canvas for it
+        let num = pages.length
+        console.log(num)
         var div = document.getElementById("preview");
-        return doc.getPage(num).then((e) => makeThumb(num, e))
+        let result = await doc.getPage(num).then((e) => makeThumb(num, e))
           .then(function (canvas) {
             div.appendChild(canvas);
         });
-      }));
+      }
     }).catch(console.error);
 
     loadingTask.promise.then(function(pdf) {
@@ -262,8 +263,8 @@ function Studentreader() {
 
     var style =  {
       verticalAlign: 'top',
+      backgroundColor: '#2c2c2c',
       width: '100%',
-      backgroundColor: '#2CA8FF',
       color: 'white',
       textAlign: 'center',
         position:'relative',
@@ -304,11 +305,11 @@ function Studentreader() {
   return (
     <div>
               <div id="my_pdf_viewer" >
-                          <div id="navigation_controls" style={style}>
-                <div style={buttonsLeft}>
-                <button className="buttono pageDown" id="go_previous"></button>
-                <button className="buttono pageUp" id="go_next"></button>
-                <input id="current_page" className="toolbarField pageNumber" placeholder={1} type="number"/>
+                <div id="navigation_controls" style={style}>
+                    <div style={buttonsLeft}>
+                    <button className="buttono pageDown" id="go_previous"></button>
+                    <button className="buttono pageUp" id="go_next"></button>
+                    <input id="current_page" className="toolbarField pageNumber" placeholder={1} type="number"/>
                 </div>
 
                 <div style={buttonsCenter}>
