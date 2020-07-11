@@ -253,7 +253,7 @@ function Studentreader() {
     })
     var canvasStyle = {
     display: '0 auto',
-          backgroundColor: '#2CA8FF',
+          backgroundColor: '#abeef7',
                 verticalAlign: 'bottom',
 
           position: 'relative'
