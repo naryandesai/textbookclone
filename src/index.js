@@ -34,7 +34,7 @@ import Freshman from "views/examples/freshman.js";
 import Matlab from "views/examples/matlab.js";
 import Comp from "views/examples/comp.js";
 import Bioprocess from "views/examples/bio.js";
-import Studentreader from "views/examples/pdf.js";
+import Studentreader from "views/examples/ebookreader.js";
 import SignUp from "views/index-sections/SignUp.js";
 
 ReactDOM.render(
