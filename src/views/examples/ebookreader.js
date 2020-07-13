@@ -15,6 +15,7 @@ async function goToPage(num) {
     myState.currentPage = num
     document.getElementById("current_page").value = num
     render(myState)
+    window.scrollTo(0, 0)
 }
 
 async function goToText() {
@@ -199,7 +200,18 @@ function Studentreader() {
       });
     }
 
-
+    pdfjsLib.getDocument('https://arek-kravitz-bucket.s3.amazonaws.com/sample.pdf').promise.then(async function (doc) {
+      var pages = []; while (pages.length < doc.numPages) {pages.push(pages.length + 1);
+        // create a div for each page and build a small canvas for it
+        let num = pages.length
+        console.log(num)
+        var div = document.getElementById("preview");
+        let result = await doc.getPage(num).then((e) => makeThumb(num, e))
+          .then(function (canvas) {
+            div.appendChild(canvas);
+        });
+      }
+    }).catch(console.error);
 
     loadingTask.promise.then(function(pdf) {
  pdf.getOutline().then((outline) => {
@@ -341,7 +353,7 @@ function Studentreader() {
                     <div id="canvas_container" style={canvasStyle}>
                         <canvas id="pdf_renderer" ></canvas>
                     </div>
-                    <div id="preview" style={{height:"96px", overflowY: 'auto'}}> </div>
+                    <div id="preview" style={{overflowY: 'auto'}}> </div>
               </div>
     </div>
       );
