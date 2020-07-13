@@ -4,7 +4,6 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import "views/RiggsPDF.pdf";
 import * as pdfjsLib from 'pdfjs-dist';
 import './pdf.css';
-
 var myState = {
     pdf: null,
     currentPage: 1,
@@ -48,8 +47,8 @@ async function goToText() {
 
 async function goToRef(ref) {
     var maxPages = myState.pdf._pdfInfo.numPages;
-    var currentPage = myState.currentPage
-    var pageNum = currentPage;
+    var currentPage = ref.num/3
+    var pageNum = 1;
     for (var j = parseInt(currentPage) + 1; j <= maxPages; j++) {
       var page = await myState.pdf.getPage(j);
 
