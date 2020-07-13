@@ -8,7 +8,7 @@ import './pdf.css';
 var myState = {
     pdf: null,
     currentPage: 1,
-    zoom: 1
+    zoom: 2
 }
 
 async function goToPage(num) {
@@ -52,7 +52,6 @@ function render(myState) {
     var canvasStyle = {
     display: '0 auto',
           backgroundColor: '#FFFFFF',
-          position: 'absolute'
 
     }
     canvas.id     = "pdf_renderer";
@@ -84,7 +83,7 @@ function render(myState) {
       });
       for (var i = 0; i < annotationsData.length; i++) {
         var annotation = annotationsData[i];
-        console.log(annotation)
+        console.log('AREK', annotation)
         if (!annotation || !('Link' == annotation.subtype)) {
           continue;
         }
@@ -126,6 +125,7 @@ function render(myState) {
             if (x >= linkX && x <= (linkX + linkWidth)
                     && y >= linkY && y <= (linkY + linkHeight)) {
                 if(dest) {
+                    console.log('AREK', dest)
                     dest = dest.substring(dest.indexOf('.')+1)
                     console.log(dest)
                     document.getElementById("searchtext").value = dest
@@ -196,13 +196,13 @@ function Studentreader() {
         document.getElementById('zoom_in')
         .addEventListener('click', (e) => {
             if(myState.pdf == null) return;
-            myState.zoom += 0.5;
+            myState.zoom += 0.10;
             render(myState);
         });
         document.getElementById('zoom_out')
         .addEventListener('click', (e) => {
             if(myState.pdf == null) return;
-            myState.zoom -= 0.5;
+            myState.zoom -= 0.10;
             render(myState);
         });
         document.getElementById('go_previous')
