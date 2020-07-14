@@ -39,8 +39,9 @@ function Bioprocess() {
   });
   return (
     <>
+    <div style={{backgroundColor: "#FFFFFF"}}>
     <ExamplesNavbar />
-    <div className="wrapper">
+    <div className="wrapper" style={{backgroundColor: "#FFFFFF"}}>
       <div className="section section-about-us">
         <Container>
           <Row>
@@ -178,6 +179,7 @@ function Bioprocess() {
       </div>
     </Col>
     </Row>
+    </div>
   </>
 );
 }

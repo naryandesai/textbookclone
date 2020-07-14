@@ -37,6 +37,7 @@ function Comp() {
   });
   return (
     <>
+    <div style={{backgroundColor: "#FFFFFF"}}>
     <ExamplesNavbar />
     <div className="wrapper">
       <div className="section section-about-us">
@@ -104,6 +105,7 @@ function Comp() {
       </div>
     </Col>
     </Row>
+  </div>
   </>
 );
 }

@@ -38,7 +38,7 @@ function Matlab() {
   return (
     <>
     <ExamplesNavbar />
-    <div className="wrapper">
+    <div className="wrapper" >
       <div className="section section-about-us">
         <Container>
           <Row>
@@ -52,7 +52,7 @@ function Matlab() {
         </Container>
       </div>
     </div>
-    <TabPane tabId="pills2">
+    <TabPane tabId="pills2" style={{backgroundColor: "#FFFFFF"}}>
       <Col className="ml-auto mr-auto" md="8">
         <Row className="collections">
             <img
@@ -64,7 +64,7 @@ function Matlab() {
           </Row>
           </Col>
     </TabPane>
-    <Row>
+    <Row style={{backgroundColor: "#FFFFFF"}}>
       <Col className="ml-auto mr-auto text-center" md="8">
         <h3 className="title">Key Features</h3>
       </Col>
@@ -76,8 +76,8 @@ function Matlab() {
         src={require("assets/img/matlabtext.png")}
       ></img>
       </Col>
-      </Row>
-      <Row>
+    </Row>
+      <Row style={{backgroundColor: "#FFFFFF"}}>
       <Col className="ml-auto mr-auto text-center" md="5">
       <h3 className="title">Table of Contents</h3>
       <img
@@ -88,7 +88,7 @@ function Matlab() {
       ></img>
       </Col>
     </Row>
-      <Row>
+      <Row style={{backgroundColor: "#FFFFFF"}}>
     <Col className="text-center ml-auto mr-auto" md = "2">
       <div className="send-button">
         <Button
