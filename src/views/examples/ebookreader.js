@@ -4,31 +4,17 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import "views/RiggsPDF.pdf";
 import * as pdfjsLib from 'pdfjs-dist';
 import './pdf.css';
-import  CognitoAuth  from "cognito/index.js";
-
 var myState = {
     pdf: null,
     currentPage: 1,
     zoom: 2
 }
 
-var amount = 0
-
 async function goToPage(num) {
     myState.currentPage = num
     document.getElementById("current_page").value = num
     render(myState)
     window.scrollTo(0, 0)
-}
-
-async function sendEmail(num) {
-    window.open('mailto:test@example.com?subject=subject&body=Name: \r Address: \r Book title: ');
-}
-
-
-function goToLogin(event) {
-  console.log(event)
-  window.location = "/";
 }
 
 async function goToText() {
@@ -191,64 +177,6 @@ function render(myState) {
   }
 
 function Studentreader() {
-
-    let user = (CognitoAuth.getCurrentUser())
-    console.log(user.keyPrefix)
-    let email = '';
-    let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.gdjne9f3v2hmocg511onno830.testuser.userData'])['UserAttributes']
-    for(var attribute in user_attributes) {
-        console.log(user_attributes[attribute])
-        if(user_attributes[attribute].Name == 'email') {
-            email = user_attributes[attribute].Value
-        }
-    }
-    const url = "https://api.stripe.com/v1/customers?email="+email;
-
-    const options = {
-      headers: {
-        Authorization: "Bearer sk_test_51H4CPrLmMd2Skqx8VlOUBga8au0hNma6U5IKugedWAxARQ50F7CR9wXWraFY6U66PLlj1jnKqRKrHUfLO0VGiIBm00kHEV4zmk"
-      }
-    };
-
-    fetch(url, options)
-      .then( res => res.json() )
-      .then( data =>  {
-        var id = (data.data[0].id)
-        fetch("https://api.stripe.com/v1/charges?customer="+id, options)
-          .then( res => res.json() )
-          .then( data =>  {
-            console.log(data)
-            let found = false
-            for(var charge in (data.data)) {
-                var charge = data.data[charge]
-                console.log('charge ', charge)
-                var potential_amount = charge.amount - charge.amount_refunded
-                if((potential_amount == 9900 || potential_amount == 13900) && charge.calculated_statement_descriptor == "BOOK NO.1 PAYMENT") {
-                    amount = potential_amount
-                    found = true
-
-                }
-            }
-            if(!found) {
-                goToLogin()
-            } else {
-                console.log(amount)
-                if(amount == 9900)
-                document.getElementById("purchase").style.display = "";
-                else
-                document.getElementById("purchase").style.display = "block";
-
-            }
-
-          }).catch(goToLogin)
-      }
-
-    ).catch(goToLogin);
-
-
-
-
-
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
     // more code here
@@ -388,7 +316,7 @@ function Studentreader() {
     top:'0px',
     right:'0px',
     height:'40px',
-    width:'400px',display: 'inline-block',
+    width:'300px',display: 'inline-block',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
@@ -419,7 +347,6 @@ function Studentreader() {
                 <div style={buttonsRight}>
                 <input id='searchtext' type="text" className="toolbarField" placeholder="Go to text"></input>
                 <button className="buttono search" id="go" onClick={goToText}></button>
-                <button className="buttono" onClick={sendEmail}  id="purchase">Buy physical for 40$</button>
                 </div>
             </div>
                     <div id="canvas_container" style={canvasStyle}>
