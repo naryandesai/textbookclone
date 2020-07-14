@@ -317,7 +317,6 @@ function Studentreader() {
     right:'0px',
     height:'40px',
     width:'300px',display: 'inline-block',
-        overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
     }
@@ -335,18 +334,18 @@ function Studentreader() {
               <div id="my_pdf_viewer" >
                 <div id="navigation_controls" style={style}>
                     <div style={buttonsLeft}>
-                    <button className="buttono pageDown" id="go_previous"></button>
-                    <button className="buttono pageUp" id="go_next"></button>
+                    <div className="buttono pageUp" id="go_previous"></div>
+                    <div className="buttono pageDown" id="go_next"></div>
                     <input id="current_page" className="toolbarField pageNumber" placeholder={1} type="number"/>
                 </div>
 
                 <div style={buttonsCenter}>
-                <button className="buttono zoomIn" id="zoom_in"></button>
-                <button className="buttono zoomOut" id="zoom_out"></button>
+                <div className="buttono zoomIn" id="zoom_in"></div>
+                <div className="buttono zoomOut" id="zoom_out"></div>
                 </div>
                 <div style={buttonsRight}>
                 <input id='searchtext' type="text" className="toolbarField" placeholder="Go to text"></input>
-                <button className="buttono search" id="go" onClick={goToText}></button>
+                <div className="buttono search" id="go" onClick={goToText}>🔍</div>
                 </div>
             </div>
                     <div id="canvas_container" style={canvasStyle}>
