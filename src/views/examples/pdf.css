@@ -35,7 +35,6 @@ html {
 body {
   height: 100%;
   width: 100%;
-  background-color: rgba(64, 64, 64, 1);
   background-image: url(images/texture.png);
 }
 
@@ -805,21 +804,21 @@ html[dir='rtl'] .toolbarButton.findNext::before {
   transform: scaleX(-1);
 }
 
-.toolbarButton.pageUp::before {
+.pageUp {
   content: url(images/toolbarButton-pageUp.png);
 }
 html[dir='rtl'] .toolbarButton.pageUp::before {
   transform: scaleX(-1);
 }
 
-.toolbarButton.pageDown::before {
+.pageDown {
   content: url(images/toolbarButton-pageDown.png);
 }
 html[dir='rtl'] .toolbarButton.pageDown::before {
   transform: scaleX(-1);
 }
 
-.toolbarButton.zoomOut::before {
+.zoomOut {
   content: url(images/toolbarButton-zoomOut.png);
 }
 
@@ -1640,7 +1639,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
     content: url(images/toolbarButton-pageUp.png);
   }
 
- .buttono.search::before {
+ .search {
     content: url(images/toolbarButton-search.png);
   }
   html[dir='rtl'] .buttono.pageUp::before {

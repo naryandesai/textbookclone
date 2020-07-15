@@ -223,7 +223,7 @@ function Studentreader() {
                 var charge = data.data[charge]
                 console.log('charge ', charge)
                 var potential_amount = charge.amount - charge.amount_refunded
-                if((potential_amount == 9900 || potential_amount == 13900) && charge.calculated_statement_descriptor == "BOOK NO.1 PAYMENT") {
+                if((potential_amount == 9900 || potential_amount == 13900)) {
                     amount = potential_amount
                     found = true
 
@@ -388,8 +388,7 @@ function Studentreader() {
     top:'0px',
     right:'0px',
     height:'40px',
-    width:'400px',display: 'inline-block',
-        overflow: 'hidden',
+    width:'350px',display: 'inline-block',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
     }
@@ -407,14 +406,14 @@ function Studentreader() {
               <div id="my_pdf_viewer" >
                 <div id="navigation_controls" style={style}>
                     <div style={buttonsLeft}>
-                    <button className="buttono pageDown" id="go_previous"></button>
-                    <button className="buttono pageUp" id="go_next"></button>
+                    <div className="buttono pageUp" id="go_previous"></div>
+                    <div className="buttono pageDown" id="go_next"></div>
                     <input id="current_page" className="toolbarField pageNumber" placeholder={1} type="number"/>
                 </div>
 
                 <div style={buttonsCenter}>
-                <button className="buttono zoomIn" id="zoom_in"></button>
-                <button className="buttono zoomOut" id="zoom_out"></button>
+                <div className="buttono zoomIn" id="zoom_in"></div>
+                <div className="buttono zoomOut" id="zoom_out"></div>
                 </div>
                 <div style={buttonsRight}>
                 <input id='searchtext' type="text" className="toolbarField" placeholder="Go to text"></input>

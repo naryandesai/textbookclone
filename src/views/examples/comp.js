@@ -20,20 +20,27 @@ import {
   Col
 } from "reactstrap";
 
+
+let PRICE_ID = 'price_1H57JJLmMd2Skqx8f9Qi9hwK'
+
+let SESSION_KEY = 'sk_test_51H4CPrLmMd2Skqx8VlOUBga8au0hNma6U5IKugedWAxARQ50F7CR9wXWraFY6U66PLlj1jnKqRKrHUfLO0VGiIBm00kHEV4zmk'
+
+let CHECKOUT_KEY = 'pk_test_51H4CPrLmMd2Skqx8QxO2kAZdbdhmqeHHG99wLpEFXZbsCBIsALzsIP5SViqcwA2JXEjqvEGAHp4339oNvo6TkrCO00a4nPvFbc'
+
 function startPurchase() {
   console.log('Start purchase!')
   const options = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: "Bearer sk_test_51H4CPrLmMd2Skqx8VlOUBga8au0hNma6U5IKugedWAxARQ50F7CR9wXWraFY6U66PLlj1jnKqRKrHUfLO0VGiIBm00kHEV4zmk"
+      Authorization: "Bearer "
     },
     body: JSON.stringify({payment_method_types:['card']})
   };
 fetch("https://api.stripe.com/v1/checkout/sessions", {
-  body: "success_url="+window.location+"&cancel_url="+window.location+"&payment_method_types[0]=card&line_items[0][price]=price_1H57JJLmMd2Skqx8f9Qi9hwK&line_items[0][quantity]=1&mode=payment",
+  body: "success_url="+window.location+"&cancel_url="+window.location+"&payment_method_types[0]=card&line_items[0][price]="+PRICE_ID+"&line_items[0][quantity]=1&mode=payment",
   headers: {
-    Authorization: "Bearer sk_test_51H4CPrLmMd2Skqx8VlOUBga8au0hNma6U5IKugedWAxARQ50F7CR9wXWraFY6U66PLlj1jnKqRKrHUfLO0VGiIBm00kHEV4zmk",
+    Authorization: "Bearer "+SESSION_KEY,
     "Content-Type": "application/x-www-form-urlencoded"
   },
   method: "POST"
@@ -41,7 +48,7 @@ fetch("https://api.stripe.com/v1/checkout/sessions", {
     console.log("stripe response ", session)
     return session.json()}).then((session) => {
     console.log("stripe response ", session)
-    const stripePromise = loadStripe('pk_test_51H4CPrLmMd2Skqx8QxO2kAZdbdhmqeHHG99wLpEFXZbsCBIsALzsIP5SViqcwA2JXEjqvEGAHp4339oNvo6TkrCO00a4nPvFbc')
+    const stripePromise = loadStripe(CHECKOUT_KEY)
     .then((stripe) => {
         console.log('requesting stripe redirect', session)
         let sessionId = session.id
@@ -70,6 +77,7 @@ function Comp() {
   });
   return (
     <>
+    <div style={{backgroundColor: "#FFFFFF"}}>
     <ExamplesNavbar />
     <div className="wrapper">
       <div className="section section-about-us">
@@ -137,6 +145,7 @@ function Comp() {
       </div>
     </Col>
     </Row>
+  </div>
   </>
 );
 }
