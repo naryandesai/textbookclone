@@ -1,4 +1,5 @@
 import React from "react";
+import { loadStripe } from '@stripe/stripe-js';
 
 // reactstrap components
 // import {
@@ -23,6 +24,46 @@ import {
   Col
 } from "reactstrap";
 
+
+
+let PRICE_ID = 'price_1H57JJLmMd2Skqx8f9Qi9hwK'
+
+let SESSION_KEY = 'sk_test_51H4CPrLmMd2Skqx8VlOUBga8au0hNma6U5IKugedWAxARQ50F7CR9wXWraFY6U66PLlj1jnKqRKrHUfLO0VGiIBm00kHEV4zmk'
+
+let CHECKOUT_KEY = 'pk_test_51H4CPrLmMd2Skqx8QxO2kAZdbdhmqeHHG99wLpEFXZbsCBIsALzsIP5SViqcwA2JXEjqvEGAHp4339oNvo6TkrCO00a4nPvFbc'
+
+function startPurchase() {
+  console.log('Start purchase!')
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: "Bearer "
+    },
+    body: JSON.stringify({payment_method_types:['card']})
+  };
+fetch("https://api.stripe.com/v1/checkout/sessions", {
+  body: "success_url="+window.location+"&cancel_url="+window.location+"&payment_method_types[0]=card&line_items[0][price]="+PRICE_ID+"&line_items[0][quantity]=1&mode=payment",
+  headers: {
+    Authorization: "Bearer "+SESSION_KEY,
+    "Content-Type": "application/x-www-form-urlencoded"
+  },
+  method: "POST"
+}).then((session) => {
+    console.log("stripe response ", session)
+    return session.json()}).then((session) => {
+    console.log("stripe response ", session)
+    const stripePromise = loadStripe(CHECKOUT_KEY)
+    .then((stripe) => {
+        console.log('requesting stripe redirect', session)
+        let sessionId = session.id
+        const { error } = stripe.redirectToCheckout({
+          sessionId,
+        }).catch((error) =>
+        console.log(error))}).catch((error) =>
+        console.log(error));
+    }).catch(console.log)
+}
 // sections for this page
 
 function Bioprocess() {
@@ -170,8 +211,8 @@ function Bioprocess() {
           block
           className="btn-round"
           align-items="center"
+          onClick={startPurchase}
           color="info"
-          href="http://www.ferretpublish.com/"
           size="lg"
         >
           Purchase

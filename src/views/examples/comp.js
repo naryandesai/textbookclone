@@ -136,8 +136,8 @@ function Comp() {
           block
           className="btn-round"
           align-items="center"
-          onClick={startPurchase}
           color="info"
+          href="http://www.ferretpublish.com/"
           size="lg"
         >
           Purchase
@@ -145,7 +145,7 @@ function Comp() {
       </div>
     </Col>
     </Row>
-  </div>
+    </div>
   </>
 );
 }
