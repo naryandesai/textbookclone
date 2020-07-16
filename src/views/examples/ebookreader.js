@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Document, Page } from 'react-pdf';
 import "react-pdf/dist/Page/AnnotationLayer.css";
+import { loadStripe } from '@stripe/stripe-js';
 import "views/RiggsPDF.pdf";
 import * as pdfjsLib from 'pdfjs-dist';
 import './pdf.css';
@@ -14,6 +15,9 @@ var myState = {
 
 var amount = 0
 
+
+var boughtPhysicalAmount = false
+
 async function goToPage(num) {
     myState.currentPage = num
     document.getElementById("current_page").value = num
@@ -22,14 +26,77 @@ async function goToPage(num) {
 }
 
 async function sendEmail(num) {
-    window.open('mailto:test@example.com?subject=subject&body=Name: \r Address: \r Book title: ');
+    console.log('Start purchase!')
+    const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: "Bearer "
+    },
+        body: JSON.stringify({payment_method_types:['card']})
+    };
+    console.log(process.env)
+    fetch("https://api.stripe.com/v1/checkout/sessions", {
+    body: "success_url="+window.location+"&cancel_url="+window.location+"&payment_method_types[0]=card&line_items[0][name]='Online edition of book '&line_items[0][currency]=usd&line_items[0][amount]=4000&line_items[0][quantity]=1&mode=payment",
+    headers: {
+    Authorization: "Bearer "+process.env.REACT_APP_SESSION_KEY,
+        "Content-Type": "application/x-www-form-urlencoded"
+        },
+        method: "POST"
+    }).then((session) => {
+    console.log("stripe response ", session)
+    return session.json()}).then((session) => {
+    console.log("stripe response ", session)
+    const stripePromise = loadStripe(process.env.REACT_APP_CHECKOUT_KEY)
+    .then((stripe) => {
+        console.log('requesting stripe redirect', session)
+        let sessionId = session.id
+        const { error } = stripe.redirectToCheckout({
+          sessionId,
+        }).catch((error) =>
+        console.log(error))}).catch((error) =>
+        console.log(error));
+    }).catch(console.log)
 }
 
 
-function goToLogin(event) {
-  console.log(event)
-  window.location = "/";
+
+let PRICE_ID = 'price_1H57JJLmMd2Skqx8f9Qi9hwK'
+
+function goToLogin() {
+  console.log('Start purchase!')
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: "Bearer "
+    },
+    body: JSON.stringify({payment_method_types:['card']})
+  };
+fetch("https://api.stripe.com/v1/checkout/sessions", {
+  body: "success_url="+window.location+"&cancel_url="+window.location+"&payment_method_types[0]=card&line_items[0][price]="+PRICE_ID+"&line_items[0][quantity]=1&mode=payment",
+  headers: {
+    Authorization: "Bearer "+process.env.REACT_APP_SESSION_KEY,
+    "Content-Type": "application/x-www-form-urlencoded"
+  },
+  method: "POST"
+}).then((session) => {
+    console.log("stripe response ", session)
+    return session.json()}).then((session) => {
+    console.log("stripe response ", session)
+    const stripePromise = loadStripe(process.env.REACT_APP_CHECKOUT_KEY)
+    .then((stripe) => {
+        console.log('requesting stripe redirect', session)
+        let sessionId = session.id
+        const { error } = stripe.redirectToCheckout({
+          sessionId,
+        }).catch((error) =>
+        console.log(error))}).catch((error) =>
+        console.log(error));
+    }).catch(console.log)
 }
+
+
 
 async function goToText() {
     var searchText = document.getElementById("searchtext").value
@@ -206,7 +273,7 @@ function Studentreader() {
 
     const options = {
       headers: {
-        Authorization: "Bearer sk_test_51H4CPrLmMd2Skqx8VlOUBga8au0hNma6U5IKugedWAxARQ50F7CR9wXWraFY6U66PLlj1jnKqRKrHUfLO0VGiIBm00kHEV4zmk"
+        Authorization: "Bearer " + process.env.REACT_APP_CHECKOUT_KEY
       }
     };
 
@@ -214,44 +281,33 @@ function Studentreader() {
       .then( res => res.json() )
       .then( data =>  {
         var id = (data.data[0].id)
-        fetch("https://api.stripe.com/v1/charges?customer="+id, options)
+        console.log('CHARGE', id)
+        fetch("https://api.stripe.com/v1/charges?customer="+id+"&limit=20", options)
           .then( res => res.json() )
           .then( data =>  {
-            console.log(data)
+            console.log('data', data)
             let found = false
             for(var charge in (data.data)) {
                 var charge = data.data[charge]
+                console.log('CHARGE ', charge)
                 console.log('charge ', charge)
                 var potential_amount = charge.amount - charge.amount_refunded
-                if((potential_amount == 9900 || potential_amount == 13900)) {
+                if((potential_amount == 9900 || potential_amount == 4000)) {
                     amount = potential_amount
                     found = true
-
+                }
+                if((potential_amount == 4000)) {
+                    document.getElementById("purchase").style.display = "block";
                 }
             }
             if(!found) {
                 goToLogin()
             } else {
                 console.log(amount)
+                document.getElementById("purchase").style.display = "block";
                 if(amount == 9900)
                 document.getElementById("purchase").style.display = "";
-                else
-                document.getElementById("purchase").style.display = "block";
 
-            }
-
-          }).catch(goToLogin)
-      }
-
-    ).catch(goToLogin);
-
-
-
-
-
-  const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
-    // more code here
     console.log(pdfjsLib.version)
     pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`
     const loadingTask = pdfjsLib.getDocument('https://arek-kravitz-bucket.s3.amazonaws.com/sample.pdf');
@@ -271,86 +327,97 @@ function Studentreader() {
       });
     }
 
-    pdfjsLib.getDocument('https://arek-kravitz-bucket.s3.amazonaws.com/sample.pdf').promise.then(async function (doc) {
-      var pages = []; while (pages.length < doc.numPages) {pages.push(pages.length + 1);
-        // create a div for each page and build a small canvas for it
-        let num = pages.length
-        console.log(num)
-        var div = document.getElementById("preview");
-        let result = await doc.getPage(num).then((e) => makeThumb(num, e))
-          .then(function (canvas) {
-            div.appendChild(canvas);
-        });
-      }
-    }).catch(console.error);
+            pdfjsLib.getDocument('https://arek-kravitz-bucket.s3.amazonaws.com/sample.pdf').promise.then(async function (doc) {
+              var pages = []; while (pages.length < doc.numPages) {pages.push(pages.length + 1);
+                // create a div for each page and build a small canvas for it
+                let num = pages.length
+                console.log(num)
+                var div = document.getElementById("preview");
+                let result = await doc.getPage(num).then((e) => makeThumb(num, e))
+                  .then(function (canvas) {
+                    div.appendChild(canvas);
+                });
+              }
+            }).catch(console.error);
 
-    loadingTask.promise.then(function(pdf) {
- pdf.getOutline().then((outline) => {
-   console.log(outline)
- });
-      console.log(pdf.getPageLabels().then(e=>console.log(e)))
-      myState.pdf = pdf;
-        document.getElementById('zoom_in')
-        .addEventListener('click', (e) => {
-            if(myState.pdf == null) return;
-            myState.zoom += 0.5;
-            console.log('ZOOM', myState.zoom)
-            render(myState);
-        });
-        document.getElementById('zoom_out')
-        .addEventListener('click', (e) => {
-            if(myState.pdf == null) return;
-            if(myState.zoom > 2)
-            myState.zoom -= 0.5;
-            console.log('ZOOM', myState.zoom)
-            render(myState);
-        });
-        document.getElementById('go_previous')
+            loadingTask.promise.then(function(pdf) {
+                pdf.getOutline().then((outline) => {
+                console.log(outline)
+                });
+              console.log(pdf.getPageLabels().then(e=>console.log(e)))
+              myState.pdf = pdf;
+                document.getElementById('zoom_in')
                 .addEventListener('click', (e) => {
-                    if(myState.pdf == null
-                       || myState.currentPage == 1) return;
-                    myState.currentPage -= 1;
-                    document.getElementById("current_page")
-                            .value = myState.currentPage;
+                    if(myState.pdf == null) return;
+                    myState.zoom += 0.5;
+                    console.log('ZOOM', myState.zoom)
                     render(myState);
                 });
-        document.getElementById('go_next')
+                document.getElementById('zoom_out')
                 .addEventListener('click', (e) => {
-                    if(myState.pdf == null
-                       || myState.currentPage > myState.pdf
-                                                       ._pdfInfo.numPages)
-                       return;
-
-                    myState.currentPage += 1;
-                    document.getElementById("current_page")
-                            .value = myState.currentPage;
+                    if(myState.pdf == null) return;
+                    if(myState.zoom > 2)
+                    myState.zoom -= 0.5;
+                    console.log('ZOOM', myState.zoom)
                     render(myState);
-        });
-        document.getElementById('current_page')
-        .addEventListener('keypress', (e) => {
-            if(myState.pdf == null) return;
+                });
+                document.getElementById('go_previous')
+                        .addEventListener('click', (e) => {
+                            if(myState.pdf == null
+                               || myState.currentPage == 1) return;
+                            myState.currentPage -= 1;
+                            document.getElementById("current_page")
+                                    .value = myState.currentPage;
+                            render(myState);
+                        });
+                document.getElementById('go_next')
+                        .addEventListener('click', (e) => {
+                            if(myState.pdf == null
+                               || myState.currentPage > myState.pdf
+                                                               ._pdfInfo.numPages)
+                               return;
 
-            // Get key code
-            var code = (e.keyCode ? e.keyCode : e.which);
+                            myState.currentPage += 1;
+                            document.getElementById("current_page")
+                                    .value = myState.currentPage;
+                            render(myState);
+                });
+                document.getElementById('current_page')
+                .addEventListener('keypress', (e) => {
+                    if(myState.pdf == null) return;
 
-            // If key code matches that of the Enter key
-            if(code == 13) {
-                var desiredPage =
-                        document.getElementById('current_page')
-                                .valueAsNumber;
+                    // Get key code
+                    var code = (e.keyCode ? e.keyCode : e.which);
 
-                if(desiredPage >= 1
-                   && desiredPage <= myState.pdf
-                                            ._pdfInfo.numPages) {
-                        myState.currentPage = desiredPage;
-                        document.getElementById("current_page")
-                                .value = desiredPage;
-                        render(myState);
-                }
+                    // If key code matches that of the Enter key
+                    if(code == 13) {
+                        var desiredPage =
+                                document.getElementById('current_page')
+                                        .valueAsNumber;
+
+                        if(desiredPage >= 1
+                           && desiredPage <= myState.pdf
+                                                    ._pdfInfo.numPages) {
+                                myState.currentPage = desiredPage;
+                                document.getElementById("current_page")
+                                        .value = desiredPage;
+                                render(myState);
+                        }
+                    }
+                });
+              render(myState);
+            })
+
+
             }
-        });
-      render(myState);
-    })
+          }).catch(goToLogin)
+      }
+
+    ).catch(goToLogin);
+
+  const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
+    // more code here
     var canvasStyle = {
     display: '0 auto',
           backgroundColor: '#abeef7',
@@ -417,7 +484,7 @@ function Studentreader() {
                 </div>
                 <div style={buttonsRight}>
                 <input id='searchtext' type="text" className="toolbarField" placeholder="Go to text"></input>
-                <button className="buttono search" id="go" onClick={goToText}></button>
+                <button className="buttono search" id="go" onClick={goToText}>🔍</button>
                 <button className="buttono" onClick={sendEmail}  id="purchase">Buy physical for 40$</button>
                 </div>
             </div>
