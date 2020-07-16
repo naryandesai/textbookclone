@@ -273,7 +273,7 @@ function Studentreader() {
 
     const options = {
       headers: {
-        Authorization: "Bearer " + process.env.REACT_APP_CHECKOUT_KEY
+        Authorization: "Bearer " + process.env.REACT_APP_SESSION_KEY
       }
     };
 

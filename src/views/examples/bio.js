@@ -9,6 +9,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import LandingPageHeader from "components/Headers/LandingPageHeader.js";
 import DefaultFooter from "components/Footers/DefaultFooter.js";
+import  CognitoAuth  from "cognito/index.js";
 
 import {
   Button,
@@ -24,6 +25,7 @@ import {
   Col
 } from "reactstrap";
 
+let amount = 0;
 
 
 function startPurchase() {
@@ -40,7 +42,7 @@ function startPurchase() {
   fetch("https://api.stripe.com/v1/checkout/sessions", {
     body: "success_url="+window.location+"&cancel_url="+window.location+"&payment_method_types[0]=card&line_items[0][name]='Online edition of book '&line_items[0][currency]=usd&line_items[0][amount]=9900&line_items[0][quantity]=1&mode=payment",
     headers: {
-      Authorization: "Bearer "+process.env.REACT_APP_CHECKOUT_KEY,
+      Authorization: "Bearer "+process.env.REACT_APP_SESSION_KEY,
       "Content-Type": "application/x-www-form-urlencoded"
     },
     method: "POST"
@@ -73,6 +75,59 @@ function Bioprocess() {
       document.body.classList.remove("sidebar-collapse");
     };
   });
+
+    let user = (CognitoAuth.getCurrentUser())
+    console.log(user.keyPrefix)
+    let email = '';
+    let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.gdjne9f3v2hmocg511onno830.testuser.userData'])['UserAttributes']
+    for(var attribute in user_attributes) {
+        console.log(user_attributes[attribute])
+        if(user_attributes[attribute].Name == 'email') {
+            email = user_attributes[attribute].Value
+        }
+    }
+    const url = "https://api.stripe.com/v1/customers?email="+email;
+
+    const options = {
+      headers: {
+        Authorization: "Bearer " + process.env.REACT_APP_SESSION_KEY
+      }
+    };
+
+    fetch(url, options)
+      .then( res => res.json() )
+      .then( data =>  {
+        var id = (data.data[0].id)
+        console.log('CHARGE', id)
+        fetch("https://api.stripe.com/v1/charges?customer="+id+"&limit=20", options)
+          .then( res => res.json() )
+          .then( data =>  {
+            console.log('data', data)
+            let found = false
+            for(var charge in (data.data)) {
+                var charge = data.data[charge]
+                console.log('CHARGE ', charge)
+                console.log('charge ', charge)
+                var potential_amount = charge.amount - charge.amount_refunded
+                if((potential_amount == 9900 || potential_amount == 4000)) {
+                    amount = potential_amount
+                    found = true
+                }
+                if((potential_amount == 4000)) {
+                    document.getElementById("purchase").style.display = "block";
+                }
+            }
+            console.log('charge ', found)
+            if(!found) {
+                document.getElementById("read").style.display = "none";
+                document.getElementById("purchase").style.display = "block";
+            } else {
+                     console.log('hidin ')
+
+                document.getElementById("read").style.display = "block";
+                document.getElementById("purchase").style.display = "none";
+                }})})
+
   return (
     <>
     <div style={{backgroundColor: "#FFFFFF"}}>
@@ -204,6 +259,7 @@ function Bioprocess() {
       <div className="send-button">
         <Button
           block
+          id="purchase"
           className="btn-round"
           align-items="center"
           onClick={startPurchase}
@@ -214,6 +270,8 @@ function Bioprocess() {
         </Button>
         <Button
           block
+          id='read'
+          style ={{display:'none'}}
           className="btn-round"
           align-items="center"
           href='/pdf-file#/pdf-file'
