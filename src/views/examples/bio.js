@@ -75,9 +75,8 @@ function Bioprocess() {
       document.body.classList.remove("sidebar-collapse");
     };
   });
-
+  try{
     let user = (CognitoAuth.getCurrentUser())
-    console.log(user.keyPrefix)
     let email = '';
     let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.gdjne9f3v2hmocg511onno830.testuser.userData'])['UserAttributes']
     for(var attribute in user_attributes) {
@@ -127,6 +126,9 @@ function Bioprocess() {
                 document.getElementById("read").style.display = "block";
                 document.getElementById("purchase").style.display = "none";
                 }})})
+    } catch (err) {
+      console.log(err)
+    }
 
   return (
     <>
