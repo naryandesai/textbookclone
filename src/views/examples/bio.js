@@ -78,7 +78,8 @@ function Bioprocess() {
   try{
     let user = (CognitoAuth.getCurrentUser())
     let email = '';
-    let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.gdjne9f3v2hmocg511onno830.testuser.userData'])['UserAttributes']
+    console.log(user)
+    let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
     for(var attribute in user_attributes) {
         console.log(user_attributes[attribute])
         if(user_attributes[attribute].Name == 'email') {
@@ -96,6 +97,7 @@ function Bioprocess() {
     fetch(url, options)
       .then( res => res.json() )
       .then( data =>  {
+        console.log(data)
         var id = (data.data[0].id)
         console.log('CHARGE', id)
         fetch("https://api.stripe.com/v1/charges?customer="+id+"&limit=20", options)

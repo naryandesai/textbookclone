@@ -123,7 +123,7 @@ function ExamplesNavbar() {
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink id="tologin"  tag={Link}>
+              <NavLink id="tologin"  to="/profile-page" tag={Link}>
                                   <a href="profile-page">
                   Profile page
                   </a>
@@ -136,11 +136,6 @@ function ExamplesNavbar() {
               <div id="login" >
               </div>
             </NavItem>
-              <NavItem>
-                <NavLink to="/profile-page" tag={Link}>
-                  Textbooks
-                </NavLink>
-              </NavItem>
               <NavItem>
                 <NavLink
                   href="https://www.facebook.com/"

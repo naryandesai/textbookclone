@@ -262,7 +262,7 @@ function Studentreader() {
     let user = (CognitoAuth.getCurrentUser())
     console.log(user.keyPrefix)
     let email = '';
-    let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.gdjne9f3v2hmocg511onno830.testuser.userData'])['UserAttributes']
+    let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
     for(var attribute in user_attributes) {
         console.log(user_attributes[attribute])
         if(user_attributes[attribute].Name == 'email') {
