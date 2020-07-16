@@ -123,8 +123,10 @@ function ExamplesNavbar() {
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink id="tologin" to="profile-page" tag={Link}>
-                {usrname}
+              <NavLink id="tologin"  tag={Link}>
+                                  <a href="profile-page">
+                  Profile page
+                  </a>
               </NavLink>
               <div id="login" >
               </div>
@@ -154,12 +156,14 @@ function ExamplesNavbar() {
               </NavItem>
               <NavItem>
                 <NavLink
-                  href="https://www.linkedin.com/"
+
                   target="_blank"
                   id="instagram-tooltip"
                 >
+                  <a href="https://www.linkedin.com/">
                   <i className="fab fa-linkedin"></i>
-                  <p className="d-lg-none d-xl-none">Instagram</p>
+                  <p className="d-lg-none d-xl-none">Linkedin</p>
+                  </a>
                 </NavLink>
                 <UncontrolledTooltip target="#instagram-tooltip">
                   Follow us on LinkedIn

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "^0.2.9",
+    "@stripe/stripe-js": "^1.8.0",
     "amazon-cognito-identity-js": "^4.3.2",
     "aws-amplify": "^3.0.18",
     "aws-amplify-react": "^4.1.17",
