@@ -93,7 +93,6 @@ function Bioprocess() {
               email = user_attributes[attribute].Value
           }
       }
-email = 'adeks12@o2.pl';
         fetch("https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/charge/"+email)
         .then( res => res.json() )
         .then( data =>  {
