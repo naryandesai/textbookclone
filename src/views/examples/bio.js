@@ -29,6 +29,7 @@ let amount = 0;
 
 
 function startPurchase() {
+  try {
     console.log('Start purchase!')
     const options = {
       method: 'POST',
@@ -39,27 +40,32 @@ function startPurchase() {
       body: JSON.stringify({payment_method_types:['card']})
     };
     console.log(process.env)
-  fetch("https://api.stripe.com/v1/checkout/sessions", {
-    body: "success_url="+window.location+"&cancel_url="+window.location+"&payment_method_types[0]=card&line_items[0][name]='Online edition of book '&line_items[0][currency]=usd&line_items[0][amount]=9900&line_items[0][quantity]=1&mode=payment",
-    headers: {
-      Authorization: "Bearer "+process.env.REACT_APP_SESSION_KEY,
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-    method: "POST"
-  }).then((session) => {
+  let user = (CognitoAuth.getCurrentUser())
+  let access_token = user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
+  console.log('access_token ', access_token)
+  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/session',
+    {
+      headers: {
+        Authorization: access_token
+      }
+    }).then((session) => {
       console.log("stripe response ", session)
       return session.json()}).then((session) => {
       console.log("stripe response ", session)
       const stripePromise = loadStripe(process.env.REACT_APP_CHECKOUT_KEY)
       .then((stripe) => {
           console.log('requesting stripe redirect', session)
-          let sessionId = session.id
+          let sessionId = session.body.id
           const { error } = stripe.redirectToCheckout({
             sessionId,
           }).catch((error) =>
           console.log(error))}).catch((error) =>
           console.log(error));
       }).catch(console.log)
+    } catch(err) {
+      window.location='/profile-page#/profile-page'
+    }
+
 }
 // sections for this page
 
@@ -76,62 +82,43 @@ function Bioprocess() {
     };
   });
   try{
-    let user = (CognitoAuth.getCurrentUser())
-    let email = '';
-    console.log(user)
-    let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
-    for(var attribute in user_attributes) {
-        console.log(user_attributes[attribute])
-        if(user_attributes[attribute].Name == 'email') {
-            email = user_attributes[attribute].Value
-        }
-    }
-    const url = "https://api.stripe.com/v1/customers?email="+email;
-
-    const options = {
-      headers: {
-        Authorization: "Bearer " + process.env.REACT_APP_SESSION_KEY
+    try {
+      let user = (CognitoAuth.getCurrentUser())
+      console.log(user.keyPrefix)
+      let email = '';
+      let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
+      for(var attribute in user_attributes) {
+          console.log(user_attributes[attribute])
+          if(user_attributes[attribute].Name == 'email') {
+              email = user_attributes[attribute].Value
+          }
       }
-    };
+email = 'adeks12@o2.pl';
+        fetch("https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/charge/"+email)
+        .then( res => res.json() )
+        .then( data =>  {
+          console.log(data)
+              console.log('data', data)
+              let found = false
+              if(data == 9900 || data == 4000){
+                  found = true
+              }
+              console.log('charge ', found)
+              if(!found) {
+                  document.getElementById("read").style.display = "none";
+                  document.getElementById("purchase").style.display = "block";
+              } else {
+                       console.log('hidin ')
 
-    fetch(url, options)
-      .then( res => res.json() )
-      .then( data =>  {
-        console.log(data)
-        var id = (data.data[0].id)
-        console.log('CHARGE', id)
-        fetch("https://api.stripe.com/v1/charges?customer="+id+"&limit=20", options)
-          .then( res => res.json() )
-          .then( data =>  {
-            console.log('data', data)
-            let found = false
-            for(var charge in (data.data)) {
-                var charge = data.data[charge]
-                console.log('CHARGE ', charge)
-                console.log('charge ', charge)
-                var potential_amount = charge.amount - charge.amount_refunded
-                if((potential_amount == 9900 || potential_amount == 4000)) {
-                    amount = potential_amount
-                    found = true
-                }
-                if((potential_amount == 4000)) {
-                    document.getElementById("purchase").style.display = "block";
-                }
-            }
-            console.log('charge ', found)
-            if(!found) {
-                document.getElementById("read").style.display = "none";
-                document.getElementById("purchase").style.display = "block";
-            } else {
-                     console.log('hidin ')
-
-                document.getElementById("read").style.display = "block";
-                document.getElementById("purchase").style.display = "none";
-                }})})
+                  document.getElementById("read").style.display = "block";
+                  document.getElementById("purchase").style.display = "none";
+                  }})
+      } catch (err) {
+        console.log(err)
+      }
     } catch (err) {
-      console.log(err)
+      window.location='/login-page'
     }
-
   return (
     <>
     <div style={{backgroundColor: "#FFFFFF"}}>

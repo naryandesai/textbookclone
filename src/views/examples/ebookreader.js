@@ -26,44 +26,6 @@ async function goToPage(num) {
 }
 
 async function sendEmail(num) {
-    console.log('Start purchase!')
-    const options = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: "Bearer "
-    },
-        body: JSON.stringify({payment_method_types:['card']})
-    };
-    console.log(process.env)
-    fetch("https://api.stripe.com/v1/checkout/sessions", {
-    body: "success_url="+window.location+"&cancel_url="+window.location+"&payment_method_types[0]=card&line_items[0][name]='Online edition of book '&line_items[0][currency]=usd&line_items[0][amount]=4000&line_items[0][quantity]=1&mode=payment",
-    headers: {
-    Authorization: "Bearer "+process.env.REACT_APP_SESSION_KEY,
-        "Content-Type": "application/x-www-form-urlencoded"
-        },
-        method: "POST"
-    }).then((session) => {
-    console.log("stripe response ", session)
-    return session.json()}).then((session) => {
-    console.log("stripe response ", session)
-    const stripePromise = loadStripe(process.env.REACT_APP_CHECKOUT_KEY)
-    .then((stripe) => {
-        console.log('requesting stripe redirect', session)
-        let sessionId = session.id
-        const { error } = stripe.redirectToCheckout({
-          sessionId,
-        }).catch((error) =>
-        console.log(error))}).catch((error) =>
-        console.log(error));
-    }).catch(console.log)
-}
-
-
-
-let PRICE_ID = 'price_1H57JJLmMd2Skqx8f9Qi9hwK'
-
-function goToLogin() {
   console.log('Start purchase!')
   const options = {
     method: 'POST',
@@ -73,27 +35,67 @@ function goToLogin() {
     },
     body: JSON.stringify({payment_method_types:['card']})
   };
-fetch("https://api.stripe.com/v1/checkout/sessions", {
-  body: "success_url="+window.location+"&cancel_url="+window.location+"&payment_method_types[0]=card&line_items[0][price]="+PRICE_ID+"&line_items[0][quantity]=1&mode=payment",
-  headers: {
-    Authorization: "Bearer "+process.env.REACT_APP_SESSION_KEY,
-    "Content-Type": "application/x-www-form-urlencoded"
-  },
-  method: "POST"
-}).then((session) => {
-    console.log("stripe response ", session)
-    return session.json()}).then((session) => {
-    console.log("stripe response ", session)
-    const stripePromise = loadStripe(process.env.REACT_APP_CHECKOUT_KEY)
-    .then((stripe) => {
-        console.log('requesting stripe redirect', session)
-        let sessionId = session.id
-        const { error } = stripe.redirectToCheckout({
-          sessionId,
-        }).catch((error) =>
-        console.log(error))}).catch((error) =>
-        console.log(error));
-    }).catch(console.log)
+  let user = (CognitoAuth.getCurrentUser())
+  let access_token = user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
+  console.log('access_token ', access_token)
+  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/addoncharge', {
+      headers: {
+        Authorization: access_token
+      }
+    }).then((session) => {
+        console.log("stripe response ", session)
+        return session.json()})
+       .then((session) => {
+        console.log("stripe response ", session)
+        const stripePromise = loadStripe(process.env.REACT_APP_CHECKOUT_KEY)
+        .then((stripe) => {
+            console.log('requesting stripe redirect', session)
+            let sessionId = session.body.id
+            const { error } = stripe.redirectToCheckout({
+              sessionId,
+            }).catch((error) =>
+            console.log(error))}).catch((error) =>
+            console.log(error));
+        }).catch(console.log)
+}
+
+
+
+let PRICE_ID = 'price_1H57JJLmMd2Skqx8f9Qi9hwK'
+
+function goToLogin(event) {
+  console.log(event)
+  console.log('Start purchase!')
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: "Bearer "
+    },
+    body: JSON.stringify({payment_method_types:['card']})
+  };
+  let user = (CognitoAuth.getCurrentUser())
+  let access_token = user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
+  console.log('access_token ', access_token)
+  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/session', {
+      headers: {
+        Authorization: access_token
+      }
+    }).then((session) => {
+        console.log("stripe response ", session)
+        return session.json()})
+       .then((session) => {
+        console.log("stripe response ", session)
+        const stripePromise = loadStripe(process.env.REACT_APP_CHECKOUT_KEY)
+        .then((stripe) => {
+            console.log('requesting stripe redirect', session)
+            let sessionId = session.body.id
+            const { error } = stripe.redirectToCheckout({
+              sessionId,
+            }).catch((error) =>
+            console.log(error))}).catch((error) =>
+            console.log(error));
+        }).catch(console.log)
 }
 
 
@@ -269,48 +271,28 @@ function Studentreader() {
             email = user_attributes[attribute].Value
         }
     }
-    const url = "https://api.stripe.com/v1/customers?email="+email;
+email = 'adeks12@o2.pl';
 
-    const options = {
-      headers: {
-        Authorization: "Bearer " + process.env.REACT_APP_SESSION_KEY
-      }
-    };
-
-    fetch(url, options)
-      .then( res => res.json() )
-      .then( data =>  {
-        var id = (data.data[0].id)
-        console.log('CHARGE', id)
-        fetch("https://api.stripe.com/v1/charges?customer="+id+"&limit=20", options)
+        fetch("https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/charge/"+email)
           .then( res => res.json() )
           .then( data =>  {
             console.log('data', data)
             let found = false
-            for(var charge in (data.data)) {
-                var charge = data.data[charge]
-                console.log('CHARGE ', charge)
-                console.log('charge ', charge)
-                var potential_amount = charge.amount - charge.amount_refunded
-                if((potential_amount == 9900 || potential_amount == 4000)) {
-                    amount = potential_amount
-                    found = true
-                }
-                if((potential_amount == 4000)) {
-                    document.getElementById("purchase").style.display = "block";
-                }
+            if(data == 9900 || data == 4000){
+                found = true
             }
+            amount = data
             if(!found) {
                 goToLogin()
             } else {
-                console.log(amount)
-                document.getElementById("purchase").style.display = "block";
-                if(amount == 9900)
-                document.getElementById("purchase").style.display = "";
+                console.log()
+                if(amount == 9900) {
+                    console.log('hiding button ', amount)
+                    document.getElementById("purchase").style.display = "";
+                }
 
     console.log(pdfjsLib.version)
     pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`
-    const loadingTask = pdfjsLib.getDocument('https://arek-kravitz-bucket.s3.amazonaws.com/sample.pdf');
 
     function makeThumb(num, page) {
       // draw page to fit into 96x96 canvas
@@ -326,8 +308,18 @@ function Studentreader() {
         return canvas;
       });
     }
-
-            pdfjsLib.getDocument('https://arek-kravitz-bucket.s3.amazonaws.com/sample.pdf').promise.then(async function (doc) {
+    let user = (CognitoAuth.getCurrentUser())
+    let access_token = user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
+    fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/ebook',
+        {
+          headers: {
+            Authorization: access_token
+          }
+        })
+        .then((resp) => resp.json())
+        .then((resp) => {
+            console.log('ebook ', resp)
+            pdfjsLib.getDocument(resp.body).promise.then(async function (doc) {
               var pages = []; while (pages.length < doc.numPages) {pages.push(pages.length + 1);
                 // create a div for each page and build a small canvas for it
                 let num = pages.length
@@ -339,6 +331,7 @@ function Studentreader() {
                 });
               }
             }).catch(console.error);
+            const loadingTask = pdfjsLib.getDocument(resp.body);
 
             loadingTask.promise.then(function(pdf) {
                 pdf.getOutline().then((outline) => {
@@ -407,14 +400,11 @@ function Studentreader() {
                 });
               render(myState);
             })
+            })
 
 
             }
           }).catch(goToLogin)
-      }
-
-    ).catch(goToLogin);
-
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
     // more code here
@@ -485,7 +475,7 @@ function Studentreader() {
                 <div style={buttonsRight}>
                 <input id='searchtext' type="text" className="toolbarField" placeholder="Go to text"></input>
                 <button className="buttono search" id="go" onClick={goToText}>🔍</button>
-                <button className="buttono" onClick={sendEmail}  id="purchase">Buy physical for 40$</button>
+                <button className="buttono" style={{display:'none'}} onClick={sendEmail}  id="purchase">Buy physical for 40$</button>
                 </div>
             </div>
                     <div id="canvas_container" style={canvasStyle}>
