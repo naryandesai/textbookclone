@@ -42,8 +42,16 @@ function startPurchase() {
     console.log(process.env)
   let user = (CognitoAuth.getCurrentUser())
   let access_token = user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
+  let email = '';
+  let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
+  for(var attribute in user_attributes) {
+      console.log(user_attributes[attribute])
+      if(user_attributes[attribute].Name == 'email') {
+          email = user_attributes[attribute].Value
+      }
+  }
   console.log('access_token ', access_token)
-  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/session',
+  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/session/'+email,
     {
       headers: {
         Authorization: access_token
@@ -55,7 +63,7 @@ function startPurchase() {
       const stripePromise = loadStripe(process.env.REACT_APP_CHECKOUT_KEY)
       .then((stripe) => {
           console.log('requesting stripe redirect', session)
-          let sessionId = session.body.id
+          let sessionId = session.id
           const { error } = stripe.redirectToCheckout({
             sessionId,
           }).catch((error) =>
