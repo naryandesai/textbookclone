@@ -276,10 +276,10 @@ function render(myState) {
   }
 
 function Studentreader() {
-
+    let email = '';
+try {
     let user = (CognitoAuth.getCurrentUser())
     console.log(user.keyPrefix)
-    let email = '';
     let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
     for(var attribute in user_attributes) {
         console.log(user_attributes[attribute])
@@ -287,7 +287,9 @@ function Studentreader() {
             email = user_attributes[attribute].Value
         }
     }
-
+} catch (error) {
+      window.location = '/profile-page#/profile-page'
+}
         fetch("https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/charge/"+email)
           .then( res => res.json() )
           .then( data =>  {
@@ -319,8 +321,14 @@ function Studentreader() {
         return canvas;
       });
     }
-    let user = (CognitoAuth.getCurrentUser())
-    let access_token = user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
+    let user = ''
+    let access_token = ''
+    try {
+        user = (CognitoAuth.getCurrentUser())
+        access_token = user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
+    } catch(error) {
+      window.location = '/profile-page#/profile-page'
+    }
     fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/ebook',
         {
           headers: {
