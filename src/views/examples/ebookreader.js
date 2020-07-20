@@ -293,7 +293,7 @@ function Studentreader() {
           .then( data =>  {
             console.log('data', data)
             let found = false
-            if(data == 9900 || data == 4000){
+            if(data == 9900 || data == 4000 || data == 13900){
                 found = true
             }
             amount = data
@@ -301,10 +301,6 @@ function Studentreader() {
                 goToLogin()
             } else {
                 console.log()
-                if(amount == 9900) {
-                    console.log('hiding button ', amount)
-                    document.getElementById("purchase").style.display = "";
-                }
 
     console.log(pdfjsLib.version)
     pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`
@@ -490,7 +486,6 @@ function Studentreader() {
                 <div style={buttonsRight}>
                 <input id='searchtext' type="text" className="toolbarField" placeholder="Go to text"></input>
                 <button className="buttono search" id="go" onClick={goToText}>🔍</button>
-                <button className="buttono" style={{display:'none'}} onClick={sendEmail}  id="purchase">Buy physical for 40$</button>
                 </div>
             </div>
                     <div id="canvas_container" style={canvasStyle}>

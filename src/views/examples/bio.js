@@ -51,7 +51,106 @@ function startPurchase() {
       }
   }
   console.log('access_token ', access_token)
-  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/session/'+email,
+  console.log()
+  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/session/9900&'+window.location,
+    {
+      headers: {
+        Authorization: access_token
+      }
+    }).then((session) => {
+      console.log("stripe response ", session)
+      return session.json()}).then((session) => {
+      console.log("stripe response ", session)
+      const stripePromise = loadStripe(process.env.REACT_APP_CHECKOUT_KEY)
+      .then((stripe) => {
+          console.log('requesting stripe redirect', session)
+          let sessionId = session.id
+          const { error } = stripe.redirectToCheckout({
+            sessionId,
+          }).catch((error) =>
+          console.log(error))}).catch((error) =>
+          console.log(error));
+      }).catch(console.log)
+    } catch(err) {
+      window.location='/profile-page#/profile-page'
+    }
+
+}
+
+
+function startPhysicalPurchase() {
+  try {
+    console.log('Start purchase!')
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: "Bearer "
+      },
+      body: JSON.stringify({payment_method_types:['card']})
+    };
+    console.log(process.env)
+  let user = (CognitoAuth.getCurrentUser())
+  let access_token = user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
+  let email = '';
+  let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
+  for(var attribute in user_attributes) {
+      console.log(user_attributes[attribute])
+      if(user_attributes[attribute].Name == 'email') {
+          email = user_attributes[attribute].Value
+      }
+  }
+  console.log('access_token ', access_token)
+  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/addoncharge/4000&'+window.location,
+    {
+      headers: {
+        Authorization: access_token
+      }
+    }).then((session) => {
+      console.log("stripe response ", session)
+      return session.json()}).then((session) => {
+      console.log("stripe response ", session)
+      const stripePromise = loadStripe(process.env.REACT_APP_CHECKOUT_KEY)
+      .then((stripe) => {
+          console.log('requesting stripe redirect', session)
+          let sessionId = session.id
+          const { error } = stripe.redirectToCheckout({
+            sessionId,
+          }).catch((error) =>
+          console.log(error))}).catch((error) =>
+          console.log(error));
+      }).catch(console.log)
+    } catch(err) {
+      window.location='/profile-page#/profile-page'
+    }
+
+}
+
+
+function startBundlePurchase() {
+  try {
+    console.log('Start purchase!')
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: "Bearer "
+      },
+      body: JSON.stringify({payment_method_types:['card']})
+    };
+    console.log(process.env)
+  let user = (CognitoAuth.getCurrentUser())
+  let access_token = user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
+  let email = '';
+  let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
+  for(var attribute in user_attributes) {
+      console.log(user_attributes[attribute])
+      if(user_attributes[attribute].Name == 'email') {
+          email = user_attributes[attribute].Value
+      }
+  }
+  console.log('access_token ', access_token)
+  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/addoncharge/13900&'+window.location,
     {
       headers: {
         Authorization: access_token
@@ -107,19 +206,25 @@ function Bioprocess() {
           console.log(data)
               console.log('data', data)
               let found = false
-              if(data == 9900 || data == 4000){
+              if(data == 9900 || data == 4000 || data == 13900){
                   found = true
               }
               console.log('charge ', found)
-              if(!found) {
-                  document.getElementById("read").style.display = "none";
+              document.getElementById("read").style.display = "none";
+              document.getElementById("purchase").style.display = "none";
+              document.getElementById("bundle").style.display = "none";
+              if(data == 0) {
+                  document.getElementById("read").style.display = "block";
                   document.getElementById("purchase").style.display = "block";
-              } else {
-                       console.log('hidin ')
-
+                  document.getElementById("bundle").style.display = "block";
+              }
+              if(data == 9900 || data == 13900 || data == 4000) {
                   document.getElementById("read").style.display = "block";
                   document.getElementById("purchase").style.display = "none";
-                  }})
+                  document.getElementById("bundle").style.display = "none";
+              }
+
+                })
       } catch (err) {
         console.log(err)
       }
@@ -157,6 +262,47 @@ function Bioprocess() {
           </Row>
           </Col>
     </TabPane>
+    <Row>
+    <Col className="text-center ml-auto mr-auto" md = "2">
+      <div className="send-button">
+        <Button
+          block
+          id="purchase"
+          className="btn-round"
+          align-items="center"
+          onClick={startPurchase}
+          color="info"
+          size="lg"
+        >
+          Purchase
+        </Button>
+        <Button
+          block
+          id='read'
+          style ={{display:'none'}}
+          className="btn-round"
+          align-items="center"
+          onClick={ startPhysicalPurchase }
+          color="info"
+          size="lg"
+        >
+          Buy physical edition
+        </Button>
+        <Button
+          block
+          id='bundle'
+          style ={{display:'block'}}
+          className="btn-round"
+          align-items="center"
+          onClick={ startBundlePurchase }
+          color="info"
+          size="lg"
+        >
+          Buy physical and online edition
+        </Button>
+      </div>
+    </Col>
+    </Row>
     <Row>
       <Col className="ml-auto mr-auto text-center" md="8">
         <h4 className="title">Retail Price: $95.00</h4>
@@ -251,35 +397,6 @@ function Bioprocess() {
                     </CardBody>
                   </Card>
       </Col>
-    </Row>
-    <Row>
-    <Col className="text-center ml-auto mr-auto" md = "2">
-      <div className="send-button">
-        <Button
-          block
-          id="purchase"
-          className="btn-round"
-          align-items="center"
-          onClick={startPurchase}
-          color="info"
-          size="lg"
-        >
-          Purchase
-        </Button>
-        <Button
-          block
-          id='read'
-          style ={{display:'none'}}
-          className="btn-round"
-          align-items="center"
-          href='/pdf-file#/pdf-file'
-          color="info"
-          size="lg"
-        >
-          Read
-        </Button>
-      </div>
-    </Col>
     </Row>
     </div>
   </>

@@ -27,7 +27,24 @@ function goToLogin(err, authenticated) {
 
 function ProfilePage() {
   const [pills, setPills] = React.useState("2");
-  console.log('wtf')
+  if(window.location.href.indexOf('email') > -1) {
+    let user = (CognitoAuth.getCurrentUser())
+    let email =''
+    let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
+    for(var attribute in user_attributes) {
+        console.log(user_attributes[attribute])
+        if(user_attributes[attribute].Name == 'email') {
+            email = user_attributes[attribute].Value
+        }
+    }
+    let access_token = user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
+    console.log('access_token ', access_token)
+    fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/email/'+email, {
+        headers: {
+          Authorization: access_token
+        }
+    })
+  }
   React.useEffect(() => {
     document.body.classList.add("profile-page");
     document.body.classList.add("sidebar-collapse");
@@ -89,11 +106,13 @@ function ProfilePage() {
                           className="img-raised"
                           src={require("assets/img/freshman.jpg")}
                         ></img>
+                        <a href='pdf-file#/pdf-file'>
                         <img
                           alt="..."
                           className="img-raised"
                           src={require("assets/img/process.jpg")}
                         ></img>
+                        </a>
                       </Col>
                       <Col md="6">
                         <img
