@@ -46,7 +46,7 @@ async function sendEmail(num) {
     }
   let access_token = user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
   console.log('access_token ', access_token)
-  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/addoncharge/'+email, {
+  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/addoncharge/'+email+"&Chemical and Bio-Process Control", {
       headers: {
         Authorization: access_token
       }
@@ -69,7 +69,6 @@ async function sendEmail(num) {
 
 
 
-let PRICE_ID = 'price_1H57JJLmMd2Skqx8f9Qi9hwK'
 
 function goToLogin(event) {
   console.log(event)
@@ -275,151 +274,164 @@ function render(myState) {
     return promise;
   }
 
-function Studentreader() {
-    let email = '';
-try {
-    let user = (CognitoAuth.getCurrentUser())
-    console.log(user.keyPrefix)
-    let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
-    for(var attribute in user_attributes) {
-        console.log(user_attributes[attribute])
-        if(user_attributes[attribute].Name == 'email') {
-            email = user_attributes[attribute].Value
-        }
-    }
-} catch (error) {
-      window.location = '/profile-page#/profile-page'
+
+function getEmail() {
+  try {
+  let user = (CognitoAuth.getCurrentUser())
+  let email = '';
+  let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
+  for(var attribute in user_attributes) {
+      console.log(user_attributes[attribute])
+      if(user_attributes[attribute].Name == 'email') {
+          email = user_attributes[attribute].Value
+      }
+  }
+  return email
 }
-        fetch("https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/charge/"+email)
-          .then( res => res.json() )
-          .then( data =>  {
-            console.log('data', data)
-            let found = false
-            if(data == 9900 || data == 4000 || data == 13900){
-                found = true
-            }
-            amount = data
-            if(!found) {
-                goToLogin()
-            } else {
-                console.log()
 
-    console.log(pdfjsLib.version)
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`
+  catch(ex) {
+    return 'arkadiusz.krawczyk.1993@gmail.com'
+  }
+}
 
-    function makeThumb(num, page) {
-      // draw page to fit into 96x96 canvas
-      var vp = page.getViewport({scale:myState.zoom});
-      var canvas = document.createElement("canvas");
-      canvas.width = canvas.height = 96;
-      canvas.onclick = function() { goToPage(num); }
-      var scale = Math.min(canvas.width / vp.width, canvas.height / vp.height);
+function getAccessToken() {
+  try {
+    let user = (CognitoAuth.getCurrentUser())
+    return  user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
+  } catch (ex) {
+    return 'dummytoken'
+  }
+}
 
-      return page.render({canvasContext: canvas.getContext("2d"), viewport: page.getViewport({scale:scale})}).promise.then(function () {
-        canvas.getContext("2d").font = "20px Arial";
-        canvas.getContext("2d").fillText(String(num), 10, 20);
-        return canvas;
-      });
-    }
-    let user = ''
-    let access_token = ''
-    try {
-        user = (CognitoAuth.getCurrentUser())
-        access_token = user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
-    } catch(error) {
-      window.location = '/profile-page#/profile-page'
-    }
-    fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/ebook',
-        {
-          headers: {
-            Authorization: access_token
+function Studentreader() {
+    let email = getEmail();
+    fetch("https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/charge/"+email+"&Chemical and Bio-Process Control")
+      .then( res => res.json() )
+      .then( data =>  {
+        console.log('data', data)
+        let found = false
+        if(data == 9900 || data == 4000 || data == 13900){
+            found = true
+        }
+        amount = data
+        if(!found) {
+            goToLogin()
+        } else {
+          console.log()
+          console.log(pdfjsLib.version)
+          pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`
+
+          function makeThumb(num, page) {
+            // draw page to fit into 96x96 canvas
+            var vp = page.getViewport({scale:myState.zoom});
+            var canvas = document.createElement("canvas");
+            canvas.width = canvas.height = 96;
+            canvas.onclick = function() { goToPage(num); }
+            var scale = Math.min(canvas.width / vp.width, canvas.height / vp.height);
+
+            return page.render({canvasContext: canvas.getContext("2d"), viewport: page.getViewport({scale:scale})}).promise.then(function () {
+              canvas.getContext("2d").font = "20px Arial";
+              canvas.getContext("2d").fillText(String(num), 10, 20);
+              return canvas;
+            });
           }
-        })
-        .then((resp) => resp.json())
-        .then((resp) => {
-            console.log('ebook ', resp)
-            pdfjsLib.getDocument(resp.body).promise.then(async function (doc) {
-              var pages = []; while (pages.length < doc.numPages) {pages.push(pages.length + 1);
-                // create a div for each page and build a small canvas for it
-                let num = pages.length
-                console.log(num)
-                var div = document.getElementById("preview");
-                let result = await doc.getPage(num).then((e) => makeThumb(num, e))
-                  .then(function (canvas) {
-                    div.appendChild(canvas);
-                });
-              }
-            }).catch(console.error);
-            const loadingTask = pdfjsLib.getDocument(resp.body);
-
-            loadingTask.promise.then(function(pdf) {
-                pdf.getOutline().then((outline) => {
-                console.log(outline)
-                });
-              console.log(pdf.getPageLabels().then(e=>console.log(e)))
-              myState.pdf = pdf;
-                document.getElementById('zoom_in')
-                .addEventListener('click', (e) => {
-                    if(myState.pdf == null) return;
-                    myState.zoom += 0.5;
-                    console.log('ZOOM', myState.zoom)
-                    render(myState);
-                });
-                document.getElementById('zoom_out')
-                .addEventListener('click', (e) => {
-                    if(myState.pdf == null) return;
-                    if(myState.zoom > 2)
-                    myState.zoom -= 0.5;
-                    console.log('ZOOM', myState.zoom)
-                    render(myState);
-                });
-                document.getElementById('go_previous')
-                        .addEventListener('click', (e) => {
-                            if(myState.pdf == null
-                               || myState.currentPage == 1) return;
-                            myState.currentPage -= 1;
-                            document.getElementById("current_page")
-                                    .value = myState.currentPage;
-                            render(myState);
-                        });
-                document.getElementById('go_next')
-                        .addEventListener('click', (e) => {
-                            if(myState.pdf == null
-                               || myState.currentPage > myState.pdf
-                                                               ._pdfInfo.numPages)
-                               return;
-
-                            myState.currentPage += 1;
-                            document.getElementById("current_page")
-                                    .value = myState.currentPage;
-                            render(myState);
-                });
-                document.getElementById('current_page')
-                .addEventListener('keypress', (e) => {
-                    if(myState.pdf == null) return;
-
-                    // Get key code
-                    var code = (e.keyCode ? e.keyCode : e.which);
-
-                    // If key code matches that of the Enter key
-                    if(code == 13) {
-                        var desiredPage =
-                                document.getElementById('current_page')
-                                        .valueAsNumber;
-
-                        if(desiredPage >= 1
-                           && desiredPage <= myState.pdf
-                                                    ._pdfInfo.numPages) {
-                                myState.currentPage = desiredPage;
-                                document.getElementById("current_page")
-                                        .value = desiredPage;
-                                render(myState);
-                        }
+          let access_token = ''
+          try {
+              access_token = getAccessToken()
+          } catch(error) {
+            window.location = '/profile-page#/profile-page'
+          }
+          fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/ebook',
+              {
+                headers: {
+                  Authorization: access_token
+                }
+              })
+              .then((resp) => resp.json())
+              .then((resp) => {
+                  console.log('ebook ', resp)
+                  pdfjsLib.getDocument(resp.body).promise.then(async function (doc) {
+                    var pages = []; while (pages.length < doc.numPages) {pages.push(pages.length + 1);
+                      // create a div for each page and build a small canvas for it
+                      let num = pages.length
+                      console.log(num)
+                      var div = document.getElementById("preview");
+                      let result = await doc.getPage(num).then((e) => makeThumb(num, e))
+                        .then(function (canvas) {
+                          div.appendChild(canvas);
+                      });
                     }
-                });
-              render(myState);
-            })
-            })
+                  }).catch(console.error);
+                  const loadingTask = pdfjsLib.getDocument(resp.body);
+
+                  loadingTask.promise.then(function(pdf) {
+                      pdf.getOutline().then((outline) => {
+                      console.log(outline)
+                      });
+                    console.log(pdf.getPageLabels().then(e=>console.log(e)))
+                    myState.pdf = pdf;
+                      document.getElementById('zoom_in')
+                      .addEventListener('click', (e) => {
+                          if(myState.pdf == null) return;
+                          myState.zoom += 0.5;
+                          console.log('ZOOM', myState.zoom)
+                          render(myState);
+                      });
+                      document.getElementById('zoom_out')
+                      .addEventListener('click', (e) => {
+                          if(myState.pdf == null) return;
+                          if(myState.zoom > 2)
+                          myState.zoom -= 0.5;
+                          console.log('ZOOM', myState.zoom)
+                          render(myState);
+                      });
+                      document.getElementById('go_previous')
+                              .addEventListener('click', (e) => {
+                                  if(myState.pdf == null
+                                     || myState.currentPage == 1) return;
+                                  myState.currentPage -= 1;
+                                  document.getElementById("current_page")
+                                          .value = myState.currentPage;
+                                  render(myState);
+                              });
+                      document.getElementById('go_next')
+                              .addEventListener('click', (e) => {
+                                  if(myState.pdf == null
+                                     || myState.currentPage > myState.pdf
+                                                                     ._pdfInfo.numPages)
+                                     return;
+
+                                  myState.currentPage += 1;
+                                  document.getElementById("current_page")
+                                          .value = myState.currentPage;
+                                  render(myState);
+                      });
+                      document.getElementById('current_page')
+                      .addEventListener('keypress', (e) => {
+                          if(myState.pdf == null) return;
+
+                          // Get key code
+                          var code = (e.keyCode ? e.keyCode : e.which);
+
+                          // If key code matches that of the Enter key
+                          if(code == 13) {
+                              var desiredPage =
+                                      document.getElementById('current_page')
+                                              .valueAsNumber;
+
+                              if(desiredPage >= 1
+                                 && desiredPage <= myState.pdf
+                                                          ._pdfInfo.numPages) {
+                                      myState.currentPage = desiredPage;
+                                      document.getElementById("current_page")
+                                              .value = desiredPage;
+                                      render(myState);
+                              }
+                          }
+                      });
+                    render(myState);
+                  })
+                  })
 
 
             }

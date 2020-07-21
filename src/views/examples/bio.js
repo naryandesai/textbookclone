@@ -97,26 +97,17 @@ function Bioprocess() {
   });
   try{
     try {
-      let user = (CognitoAuth.getCurrentUser())
-      console.log(user.keyPrefix)
-      let email = '';
-      let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
-      for(var attribute in user_attributes) {
-          console.log(user_attributes[attribute])
-          if(user_attributes[attribute].Name == 'email') {
-              email = user_attributes[attribute].Value
-          }
-      }
-        fetch("https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/charge/"+email)
+      let email = getEmail()
+        fetch("https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/charge/"+email+"&Chemical and Bio-Process Control")
         .then( res => res.json() )
         .then( data =>  {
           console.log(data)
               console.log('data', data)
               let found = false
+              console.log(data)
               if(data == 9900 || data == 4000 || data == 13900){
                   found = true
               }
-              data = 0
               console.log('charge ', found)
               document.getElementById("read").style.display = "none";
               document.getElementById("purchase").style.display = "none";
