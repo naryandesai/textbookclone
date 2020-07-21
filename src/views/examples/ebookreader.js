@@ -341,12 +341,7 @@ function Studentreader() {
           } catch(error) {
             window.location = '/profile-page#/profile-page'
           }
-          fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/ebook',
-              {
-                headers: {
-                  Authorization: access_token
-                }
-              })
+          fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/ebook')
               .then((resp) => resp.json())
               .then((resp) => {
                   console.log('ebook ', resp)
