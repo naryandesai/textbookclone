@@ -169,7 +169,7 @@ function Bioprocess() {
           id="purchase"
           className="btn-round"
           align-items="center"
-          onClick={() => startPurchase(9900, false, 'Chemical and Bio-Process Control')}
+          onClick={() => startPurchase(9900, false, 'Chemical and Bio-Process Control online edition')}
           color="info"
           size="lg"
         >
@@ -181,7 +181,7 @@ function Bioprocess() {
           style ={{display:'none'}}
           className="btn-round"
           align-items="center"
-          onClick={ () => startPurchase(4000, true, 'Chemical and Bio-Process Control') }
+          onClick={ () => startPurchase(4000, true, 'Chemical and Bio-Process Control physical copy') }
           color="info"
           size="lg"
         >
@@ -193,7 +193,7 @@ function Bioprocess() {
           style ={{display:'block'}}
           className="btn-round"
           align-items="center"
-          onClick={ () => startPurchase(13900, true, 'Chemical and Bio-Process Control')  }
+          onClick={ () => startPurchase(13900, true, 'Chemical and Bio-Process Control physical + online bundle')  }
           color="info"
           size="lg"
         >
