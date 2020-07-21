@@ -15,7 +15,7 @@ import {
 } from "reactstrap";
 import  CognitoAuth  from "cognito/index.js";
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
-
+import { Hub, Logger } from 'aws-amplify';
 // core components
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import ProfilePageHeader from "components/Headers/ProfilePageHeader.js";
@@ -25,8 +25,38 @@ function goToLogin(err, authenticated) {
   window.location = "/";
 }
 
+const logger = new Logger('My-Logger');
+
+const listener = (data) => {
+
+    switch (data.payload.event) {
+
+        case 'signIn':
+            logger.error('user signed in'); //[ERROR] My-Logger - user signed in
+            break;
+        case 'signUp':
+            logger.error('user signed up');
+            alert("Confirm you account with link sent to your email inbox!")
+            window.location='/'
+            break;
+        case 'signOut':
+            logger.error('user signed out');
+            break;
+        case 'signIn_failure':
+            logger.error('user sign in failed');
+            break;
+        case 'configured':
+            logger.error('the Auth module is configured');
+
+    }
+}
+
+Hub.listen('auth', listener);
+
+
 function ProfilePage() {
   const [pills, setPills] = React.useState("2");
+
   if(window.location.href.indexOf('email') > -1) {
     let user = (CognitoAuth.getCurrentUser())
     let email =''
