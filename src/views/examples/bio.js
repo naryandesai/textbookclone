@@ -28,36 +28,12 @@ import {
 let amount = 0;
 
 
-function startPurchase() {
+function startPurchase(amount, send_email, book) {
   try {
-    console.log('Start purchase!')
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: "Bearer "
-      },
-      body: JSON.stringify({payment_method_types:['card']})
-    };
-    console.log(process.env)
-  let user = (CognitoAuth.getCurrentUser())
-  let access_token = user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
-  let email = '';
-  let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
-  for(var attribute in user_attributes) {
-      console.log(user_attributes[attribute])
-      if(user_attributes[attribute].Name == 'email') {
-          email = user_attributes[attribute].Value
-      }
-  }
+  let access_token = getAccessToken()
+  let email = getEmail();
   console.log('access_token ', access_token)
-  console.log()
-  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/session/9900&'+window.location,
-    {
-      headers: {
-        Authorization: access_token
-      }
-    }).then((session) => {
+  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/session/'+String(amount)+'&' + email+'&'+book+'&'+send_email).then((session) => {
       console.log("stripe response ", session)
       return session.json()}).then((session) => {
       console.log("stripe response ", session)
@@ -77,21 +53,9 @@ function startPurchase() {
 
 }
 
-
-function startPhysicalPurchase() {
+function getEmail() {
   try {
-    console.log('Start purchase!')
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: "Bearer "
-      },
-      body: JSON.stringify({payment_method_types:['card']})
-    };
-    console.log(process.env)
   let user = (CognitoAuth.getCurrentUser())
-  let access_token = user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
   let email = '';
   let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
   for(var attribute in user_attributes) {
@@ -100,80 +64,23 @@ function startPhysicalPurchase() {
           email = user_attributes[attribute].Value
       }
   }
-  console.log('access_token ', access_token)
-  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/addoncharge/4000&'+window.location,
-    {
-      headers: {
-        Authorization: access_token
-      }
-    }).then((session) => {
-      console.log("stripe response ", session)
-      return session.json()}).then((session) => {
-      console.log("stripe response ", session)
-      const stripePromise = loadStripe(process.env.REACT_APP_CHECKOUT_KEY)
-      .then((stripe) => {
-          console.log('requesting stripe redirect', session)
-          let sessionId = session.id
-          const { error } = stripe.redirectToCheckout({
-            sessionId,
-          }).catch((error) =>
-          console.log(error))}).catch((error) =>
-          console.log(error));
-      }).catch(console.log)
-    } catch(err) {
-      window.location='/profile-page#/profile-page'
-    }
-
+  return email
 }
 
-
-function startBundlePurchase() {
-  try {
-    console.log('Start purchase!')
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: "Bearer "
-      },
-      body: JSON.stringify({payment_method_types:['card']})
-    };
-    console.log(process.env)
-  let user = (CognitoAuth.getCurrentUser())
-  let access_token = user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
-  let email = '';
-  let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
-  for(var attribute in user_attributes) {
-      console.log(user_attributes[attribute])
-      if(user_attributes[attribute].Name == 'email') {
-          email = user_attributes[attribute].Value
-      }
+  catch(ex) {
+    return 'arkadiusz.krawczyk.1993@gmail.com'
   }
-  console.log('access_token ', access_token)
-  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/addoncharge/13900&'+window.location,
-    {
-      headers: {
-        Authorization: access_token
-      }
-    }).then((session) => {
-      console.log("stripe response ", session)
-      return session.json()}).then((session) => {
-      console.log("stripe response ", session)
-      const stripePromise = loadStripe(process.env.REACT_APP_CHECKOUT_KEY)
-      .then((stripe) => {
-          console.log('requesting stripe redirect', session)
-          let sessionId = session.id
-          const { error } = stripe.redirectToCheckout({
-            sessionId,
-          }).catch((error) =>
-          console.log(error))}).catch((error) =>
-          console.log(error));
-      }).catch(console.log)
-    } catch(err) {
-      window.location='/profile-page#/profile-page'
-    }
-
 }
+
+function getAccessToken() {
+  try {
+    let user = (CognitoAuth.getCurrentUser())
+    return  user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
+  } catch (ex) {
+    return 'dummytoken'
+  }
+}
+
 // sections for this page
 
 function Bioprocess() {
@@ -209,6 +116,7 @@ function Bioprocess() {
               if(data == 9900 || data == 4000 || data == 13900){
                   found = true
               }
+              data = 0
               console.log('charge ', found)
               document.getElementById("read").style.display = "none";
               document.getElementById("purchase").style.display = "none";
@@ -270,7 +178,7 @@ function Bioprocess() {
           id="purchase"
           className="btn-round"
           align-items="center"
-          onClick={startPurchase}
+          onClick={() => startPurchase(9900, false, 'Chemical and Bio-Process Control')}
           color="info"
           size="lg"
         >
@@ -282,7 +190,7 @@ function Bioprocess() {
           style ={{display:'none'}}
           className="btn-round"
           align-items="center"
-          onClick={ startPhysicalPurchase }
+          onClick={ () => startPurchase(4000, true, 'Chemical and Bio-Process Control') }
           color="info"
           size="lg"
         >
@@ -294,7 +202,7 @@ function Bioprocess() {
           style ={{display:'block'}}
           className="btn-round"
           align-items="center"
-          onClick={ startBundlePurchase }
+          onClick={ () => startPurchase(13900, true, 'Chemical and Bio-Process Control')  }
           color="info"
           size="lg"
         >
