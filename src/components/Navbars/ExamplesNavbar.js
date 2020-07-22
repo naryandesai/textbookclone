@@ -118,15 +118,13 @@ function ExamplesNavbar() {
           >
             <Nav navbar>
             <NavItem>
-              <NavLink to="landing-page" tag={Link}>
+              <NavLink href="/landing-page" >
                 Home
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink id="tologin"  to="/profile-page" tag={Link}>
-                                  <a href="profile-page">
+              <NavLink id="tologin"  href="/profile-page#/profile-page" >
                   Profile page
-                  </a>
               </NavLink>
               <div id="login" >
               </div>
