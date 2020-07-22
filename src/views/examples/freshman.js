@@ -45,9 +45,7 @@ function Freshman() {
           <Row>
             <Col className="ml-auto mr-auto text-center" md="8">
               <h2 className="title">An Introduction to Engineering Fundamentals and MATLAB</h2>
-              <h4 className="description">
-                by Jim Riggs
-              </h4>
+              <h4 className="title">ISBN: 978-0-9669601-7-4</h4>
             </Col>
           </Row>
         </Container>
@@ -67,6 +65,8 @@ function Freshman() {
     </TabPane>
     <Row>
       <Col className="ml-auto mr-auto text-center" md="8">
+        <h3 align="center" className="title">Price</h3>
+        <h4 className="title">Hard copy $149</h4>
         <h3 className="title">Key Features</h3>
       </Col>
       <Col className="ml-auto mr-auto text-center" md="8">
