@@ -85,9 +85,7 @@ function Comp() {
           <Row>
             <Col className="ml-auto mr-auto text-center" md="8">
               <h2 className="title">Computational Methods for Engineers with MATLAB Applications</h2>
-              <h4 className="description">
-                by Jim Riggs
-              </h4>
+              <h4 className="title">ISBN: 978-0-9669601-5-7</h4>
             </Col>
           </Row>
         </Container>
@@ -107,6 +105,9 @@ function Comp() {
     </TabPane>
     <Row>
       <Col className="ml-auto mr-auto text-center" md="8">
+        <h3 align="center" className="title">Prices</h3>
+        <h4 className="title">e-book $80</h4>
+        <h4 className="title">Hard copy plus e-book $119.00</h4>
         <h3 className="title">Key Features</h3>
       </Col>
       <Col className="ml-auto mr-auto text-center" md="8">
