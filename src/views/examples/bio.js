@@ -140,10 +140,7 @@ function Bioprocess() {
           <Row>
             <Col className="ml-auto mr-auto text-center" md="8">
               <h2 className="title">Chemical and Bio-Process Control</h2>
-              <h4 className="description">
-                by Jim Riggs
-              </h4>
-              <h4 className="title">ISBN: 978-0-0966 9601-4-3</h4>
+              <h4 className="title">ISBN: 978-0-9669601-9-8</h4>
             </Col>
           </Row>
         </Container>
@@ -204,7 +201,9 @@ function Bioprocess() {
     </Row>
     <Row>
       <Col className="ml-auto mr-auto text-center" md="8">
-        <h4 className="title">Retail Price: $95.00</h4>
+        <h3 align="center" className="title">Prices</h3>
+        <h4 className="title">e-book $99</h4>
+        <h4 className="title">Hard copy plus e-book $139.00</h4>
         <h3 align="center" className="title">Key Features</h3>
       </Col>
       <Col className="ml-auto mr-auto text-center" md="8">
