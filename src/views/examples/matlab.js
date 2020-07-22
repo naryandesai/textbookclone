@@ -44,9 +44,7 @@ function Matlab() {
           <Row>
             <Col className="ml-auto mr-auto text-center" md="8">
               <h2 className="title">Programming with MATLAB for Engineers</h2>
-              <h4 className="description">
-                by Jim Riggs
-              </h4>
+              <h4 className="title">ISBN: 978-0-9669601-6-5</h4>
             </Col>
           </Row>
         </Container>
@@ -66,6 +64,9 @@ function Matlab() {
     </TabPane>
     <Row style={{backgroundColor: "#FFFFFF"}}>
       <Col className="ml-auto mr-auto text-center" md="8">
+        <h3 align="center" className="title">Prices</h3>
+        <h4 className="title">e-book $75</h3>
+        <h4 className="title">Hard copy plus e-book $109</h4>
         <h3 className="title">Key Features</h3>
       </Col>
       <Col className="ml-auto mr-auto text-center" md="8">
