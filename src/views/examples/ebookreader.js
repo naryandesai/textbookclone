@@ -290,7 +290,7 @@ function getEmail() {
 }
 
   catch(ex) {
-    return 'arkadiusz.krawczyk.1993@gmail.com'
+    window.location = '/profile-page#/profile-page'
   }
 }
 
@@ -299,7 +299,7 @@ function getAccessToken() {
     let user = (CognitoAuth.getCurrentUser())
     return  user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
   } catch (ex) {
-    return 'dummytoken'
+    window.location = '/profile-page#/profile-page'
   }
 }
 
