@@ -105,6 +105,9 @@ function Comp() {
     </TabPane>
     <Row>
       <Col className="ml-auto mr-auto text-center" md="8">
+         <h3 className="title">Key Features</h3>
+       </Col>
+      <Col className="ml-auto mr-auto text-center" md="8">
       <img
         alt="..."
         align = "center"
