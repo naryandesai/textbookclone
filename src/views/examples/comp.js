@@ -8,6 +8,8 @@ import { loadStripe } from '@stripe/stripe-js';
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import LandingPageHeader from "components/Headers/LandingPageHeader.js";
 import DefaultFooter from "components/Footers/DefaultFooter.js";
+import  CognitoAuth  from "cognito/index.js";
+
 import {
   Button,
   Input,
@@ -21,43 +23,61 @@ import {
 } from "reactstrap";
 
 
-let PRICE_ID = 'price_1H57JJLmMd2Skqx8f9Qi9hwK'
 
-let SESSION_KEY = 'sk_test_51H4CPrLmMd2Skqx8VlOUBga8au0hNma6U5IKugedWAxARQ50F7CR9wXWraFY6U66PLlj1jnKqRKrHUfLO0VGiIBm00kHEV4zmk'
+let amount = 0;
 
-let CHECKOUT_KEY = 'pk_test_51H4CPrLmMd2Skqx8QxO2kAZdbdhmqeHHG99wLpEFXZbsCBIsALzsIP5SViqcwA2JXEjqvEGAHp4339oNvo6TkrCO00a4nPvFbc'
 
-function startPurchase() {
-  console.log('Start purchase!')
-  const options = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: "Bearer "
-    },
-    body: JSON.stringify({payment_method_types:['card']})
-  };
-fetch("https://api.stripe.com/v1/checkout/sessions", {
-  body: "success_url="+window.location+"&cancel_url="+window.location+"&payment_method_types[0]=card&line_items[0][price]="+PRICE_ID+"&line_items[0][quantity]=1&mode=payment",
-  headers: {
-    Authorization: "Bearer "+SESSION_KEY,
-    "Content-Type": "application/x-www-form-urlencoded"
-  },
-  method: "POST"
-}).then((session) => {
-    console.log("stripe response ", session)
-    return session.json()}).then((session) => {
-    console.log("stripe response ", session)
-    const stripePromise = loadStripe(CHECKOUT_KEY)
-    .then((stripe) => {
-        console.log('requesting stripe redirect', session)
-        let sessionId = session.id
-        const { error } = stripe.redirectToCheckout({
-          sessionId,
-        }).catch((error) =>
-        console.log(error))}).catch((error) =>
-        console.log(error));
-    }).catch(console.log)
+function startPurchase(amount, send_email, book) {
+  try {
+  let access_token = getAccessToken()
+  let email = getEmail();
+  console.log('access_token ', access_token)
+  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/session/'+String(amount)+'&' + email+'&'+book+'&'+send_email).then((session) => {
+      console.log("stripe response ", session)
+      return session.json()}).then((session) => {
+      console.log("stripe response ", session)
+      const stripePromise = loadStripe(process.env.REACT_APP_CHECKOUT_KEY)
+      .then((stripe) => {
+          console.log('requesting stripe redirect', session)
+          let sessionId = session.id
+          const { error } = stripe.redirectToCheckout({
+            sessionId,
+          }).catch((error) =>
+          console.log(error))}).catch((error) =>
+          console.log(error));
+      }).catch(console.log)
+    } catch(err) {
+      window.location='/profile-page#/profile-page'
+    }
+
+}
+
+function getEmail() {
+  try {
+  let user = (CognitoAuth.getCurrentUser())
+  let email = '';
+  let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
+  for(var attribute in user_attributes) {
+      console.log(user_attributes[attribute])
+      if(user_attributes[attribute].Name == 'email') {
+          email = user_attributes[attribute].Value
+      }
+  }
+  return email
+}
+
+  catch(ex) {
+    return 'arkadiusz.krawczyk.1993@gmail.com'
+  }
+}
+
+function getAccessToken() {
+  try {
+    let user = (CognitoAuth.getCurrentUser())
+    return  user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
+  } catch (ex) {
+    return 'dummytoken'
+  }
 }
 
 // sections for this page
@@ -75,6 +95,41 @@ function Comp() {
       document.body.classList.remove("sidebar-collapse");
     };
   });
+  try{
+    try {
+      let email = getEmail()
+        fetch("https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/charge/"+email+"&Computational Methods for Engineers with MATLAB Applications")
+        .then( res => res.json() )
+        .then( data =>  {
+          console.log(data)
+              console.log('data', data)
+              let found = false
+              console.log(data)
+              if(data == 9900 || data == 4000 || data == 13900){
+                  found = true
+              }
+              console.log('charge ', found)
+              document.getElementById("read").style.display = "none";
+              document.getElementById("purchase").style.display = "none";
+              document.getElementById("bundle").style.display = "none";
+              if(data == 0) {
+                  document.getElementById("read").style.display = "none";
+                  document.getElementById("purchase").style.display = "block";
+                  document.getElementById("bundle").style.display = "block";
+              }
+              if(data == 9900 || data == 13900 || data == 4000) {
+                  document.getElementById("read").style.display = "block";
+                  document.getElementById("purchase").style.display = "none";
+                  document.getElementById("bundle").style.display = "none";
+              }
+
+                })
+      } catch (err) {
+        console.log(err)
+      }
+    } catch (err) {
+      window.location='/login-page'
+    }
   return (
     <>
     <div style={{backgroundColor: "#FFFFFF"}}>
@@ -104,6 +159,47 @@ function Comp() {
           </Col>
     </TabPane>
     <Row>
+    <Col className="text-center ml-auto mr-auto" md = "2">
+      <div className="send-button">
+        <Button
+          block
+          id="purchase"
+          className="btn-round"
+          align-items="center"
+          onClick={() => startPurchase(9900, false, 'Computational Methods for Engineers with MATLAB Applications')}
+          color="info"
+          size="lg"
+        >
+          Purchase online edition for $99
+        </Button>
+        <Button
+          block
+          id='read'
+          style ={{display:'none'}}
+          className="btn-round"
+          align-items="center"
+          onClick={ () => startPurchase(4000, true, 'Computational Methods for Engineers with MATLAB Applications') }
+          color="info"
+          size="lg"
+        >
+          Buy extra physical edition for $40
+        </Button>
+        <Button
+          block
+          id='bundle'
+          style ={{display:'block'}}
+          className="btn-round"
+          align-items="center"
+          onClick={ () => startPurchase(13900, true, 'Computational Methods for Engineers with MATLAB Applications')  }
+          color="info"
+          size="lg"
+        >
+          Purchase online and physical edition for $139
+        </Button>
+      </div>
+    </Col>
+    </Row>
+    <Row>
       <Col className="ml-auto mr-auto text-center" md="8">
         <h3 align="center" className="title">Prices</h3>
         <h4 className="title">e-book $80</h4>
@@ -129,22 +225,6 @@ function Comp() {
         src={require("assets/img/comptoc2.png")}
       ></img>
       </Col>
-    </Row>
-    <Row>
-    <Col className="text-center ml-auto mr-auto" md = "2">
-      <div className="send-button">
-        <Button
-          block
-          className="btn-round"
-          align-items="center"
-          color="info"
-          href="http://www.ferretpublish.com/"
-          size="lg"
-        >
-          Purchase
-        </Button>
-      </div>
-    </Col>
     </Row>
     </div>
   </>

@@ -68,7 +68,7 @@ function getEmail() {
 }
 
   catch(ex) {
-    return 'arkadiusz.krawczyk.1993@gmail.com'
+    window.location = '/profile-page#/profile-page'
   }
 }
 
@@ -77,7 +77,7 @@ function getAccessToken() {
     let user = (CognitoAuth.getCurrentUser())
     return  user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
   } catch (ex) {
-    return 'dummytoken'
+    window.location = '/profile-page#/profile-page'
   }
 }
 
@@ -166,7 +166,7 @@ function Bioprocess() {
           id="purchase"
           className="btn-round"
           align-items="center"
-          onClick={() => startPurchase(9900, false, 'Chemical and Bio-Process Control online edition')}
+          onClick={() => startPurchase(9900, false, 'Chemical and Bio-Process Control')}
           color="info"
           size="lg"
         >
@@ -178,7 +178,7 @@ function Bioprocess() {
           style ={{display:'none'}}
           className="btn-round"
           align-items="center"
-          onClick={ () => startPurchase(4000, true, 'Chemical and Bio-Process Control physical copy') }
+          onClick={ () => startPurchase(4000, true, 'Chemical and Bio-Process Control') }
           color="info"
           size="lg"
         >
@@ -190,7 +190,7 @@ function Bioprocess() {
           style ={{display:'block'}}
           className="btn-round"
           align-items="center"
-          onClick={ () => startPurchase(13900, true, 'Chemical and Bio-Process Control physical + online bundle')  }
+          onClick={ () => startPurchase(13900, true, 'Chemical and Bio-Process Control physical')  }
           color="info"
           size="lg"
         >
