@@ -64,11 +64,8 @@ function Matlab() {
     </TabPane>
     <Row style={{backgroundColor: "#FFFFFF"}}>
       <Col className="ml-auto mr-auto text-center" md="8">
-        <h3 align="center" className="title">Prices</h3>
-        <h4 className="title">e-book $75</h4>
-        <h4 className="title">Hard copy plus e-book $109</h4>
-        <h3 className="title">Key Features</h3>
-      </Col>
+         <h3 className="title">Key Features</h3>
+       </Col>
       <Col className="ml-auto mr-auto text-center" md="8">
       <img
         alt="..."

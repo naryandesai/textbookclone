@@ -34,22 +34,6 @@ function LandingPageHeader() {
         <div className="content-center">
           <Container>
             <h1 className="title">Welcome to Ferret Publishing.</h1>
-            <div className="text-center">
-              <Button
-                className="btn-icon btn-round"
-                color="info"
-                href="https://www.facebook.com"
-              >
-                <i className="fab fa-facebook-square"></i>
-              </Button>
-              <Button
-                className="btn-icon btn-round"
-                color="info"
-                href="https://www.linkedin.com/"
-              >
-                <i className="fab fa-linkedin"></i>
-              </Button>
-            </div>
           </Container>
         </div>
       </div>
