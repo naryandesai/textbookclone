@@ -68,7 +68,7 @@ function getEmail() {
 }
 
   catch(ex) {
-    window.location = '/profile-page#/profile-page'
+    return 'dummy'
   }
 }
 
@@ -77,7 +77,7 @@ function getAccessToken() {
     let user = (CognitoAuth.getCurrentUser())
     return  user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
   } catch (ex) {
-    window.location = '/profile-page#/profile-page'
+    window.location = 'dummy'
   }
 }
 

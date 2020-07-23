@@ -136,7 +136,7 @@ function ProfilePage() {
                           className="img-raised"
                           src={require("assets/img/freshman.jpg")}
                         ></img>
-                        <a href='pdf-file#/pdf-file'>
+                        <a href='pdf-file#/pdf-file/Chemical and Bio-Process Control'>
                         <img
                           alt="..."
                           className="img-raised"
@@ -150,11 +150,13 @@ function ProfilePage() {
                           className="img-raised"
                           src={require("assets/img/matlab.jpg")}
                         ></img>
+                        <a href='pdf-file#/pdf-file/Computational Methods for Engineers with MATLAB Applications'>
                         <img
                           alt="..."
                           className="img-raised"
                           src={require("assets/img/comp.jpg")}
                         ></img>
+                        </a>
                       </Col>
                     </Row>
                   </Col>

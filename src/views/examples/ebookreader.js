@@ -25,96 +25,6 @@ async function goToPage(num) {
     window.scrollTo(0, 0)
 }
 
-async function sendEmail(num) {
-  console.log('Start purchase!')
-  const options = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: "Bearer "
-    },
-    body: JSON.stringify({payment_method_types:['card']})
-  };
-  let user = (CognitoAuth.getCurrentUser())
-  let email =''
-    let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
-    for(var attribute in user_attributes) {
-        console.log(user_attributes[attribute])
-        if(user_attributes[attribute].Name == 'email') {
-            email = user_attributes[attribute].Value
-        }
-    }
-  let access_token = user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
-  console.log('access_token ', access_token)
-  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/addoncharge/'+email+"&Chemical and Bio-Process Control", {
-      headers: {
-        Authorization: access_token
-      }
-    }).then((session) => {
-        console.log("stripe response ", session)
-        return session.json()})
-       .then((session) => {
-        console.log("stripe response ", session)
-        const stripePromise = loadStripe(process.env.REACT_APP_CHECKOUT_KEY)
-        .then((stripe) => {
-            console.log('requesting stripe redirect', session)
-            let sessionId = session.id
-            const { error } = stripe.redirectToCheckout({
-              sessionId,
-            }).catch((error) =>
-            console.log(error))}).catch((error) =>
-            console.log(error));
-        }).catch(console.log)
-}
-
-
-
-
-function goToLogin(event) {
-  console.log(event)
-  console.log('Start purchase!')
-  const options = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: "Bearer "
-    },
-    body: JSON.stringify({payment_method_types:['card']})
-  };
-  let user = (CognitoAuth.getCurrentUser())
-  let email =''
-    let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
-    for(var attribute in user_attributes) {
-        console.log(user_attributes[attribute])
-        if(user_attributes[attribute].Name == 'email') {
-            email = user_attributes[attribute].Value
-        }
-    }
-  let access_token = user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
-  console.log('access_token ', access_token)
-  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/session/'+email, {
-      headers: {
-        Authorization: access_token
-      }
-    }).then((session) => {
-        console.log("stripe response ", session)
-        return session.json()})
-       .then((session) => {
-        console.log("stripe response ", session)
-        const stripePromise = loadStripe(process.env.REACT_APP_CHECKOUT_KEY)
-        .then((stripe) => {
-            console.log('requesting stripe redirect', session)
-            let sessionId = session.body.id
-            const { error } = stripe.redirectToCheckout({
-              sessionId,
-            }).catch((error) =>
-            console.log(error))}).catch((error) =>
-            console.log(error));
-        }).catch(console.log)
-}
-
-
-
 async function goToText() {
     var searchText = document.getElementById("searchtext").value
     searchText.replace(/\s+/g, '');
@@ -304,8 +214,9 @@ function getAccessToken() {
 }
 
 function Studentreader() {
+    let ebook = String(window.location).split('/').slice(-1)[0];
     let email = getEmail();
-    fetch("https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/charge/"+email+"&Chemical and Bio-Process Control")
+    fetch("https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/charge/"+email+"&"+ebook)
       .then( res => res.json() )
       .then( data =>  {
         console.log('data', data)
@@ -315,7 +226,7 @@ function Studentreader() {
         }
         amount = data
         if(!found) {
-            goToLogin()
+          window.location = '/profile-page#/profile-page'
         } else {
           console.log()
           console.log(pdfjsLib.version)
@@ -341,7 +252,7 @@ function Studentreader() {
           } catch(error) {
             window.location = '/profile-page#/profile-page'
           }
-          fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/ebook')
+          fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/ebook/'+ebook)
               .then((resp) => resp.json())
               .then((resp) => {
                   console.log('ebook ', resp)
@@ -430,7 +341,7 @@ function Studentreader() {
 
 
             }
-          }).catch(goToLogin)
+          }).catch(() => window.location = "/profile-page#/profile-page")
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
     // more code here

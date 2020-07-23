@@ -67,7 +67,7 @@ function getEmail() {
 }
 
   catch(ex) {
-    return 'arkadiusz.krawczyk.1993@gmail.com'
+    return 'dummy'
   }
 }
 
