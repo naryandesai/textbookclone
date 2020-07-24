@@ -1,0 +1,13 @@
+config:
+  target: "https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/charge/arkadiusz.krawczyk.1993@gmail.com&bio"
+  processor: "./random-fullapplication-payload.js"
+  phases:
+    - duration: 120
+      arrivalRate: 10
+scenarios:
+  - name: "FullApplication Requests"
+    flow:
+      - function: "generateRandomPayload"
+      - post:
+          url: "/fullapplication"
+          json: "{{payload}}"

@@ -1,0 +1,13 @@
+config:
+  target: "https://master.d1ph26s6v85mtq.amplifyapp.com/"
+  processor: "./random-fullapplication-payload.js"
+  phases:
+    - duration: 120
+      arrivalRate: 5
+scenarios:
+  - name: "FullApplication Requests"
+    flow:
+      - function: "generateRandomPayload"
+      - post:
+          url: "/fullapplication"
+          json: "{{payload}}"
