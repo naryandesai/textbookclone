@@ -32,6 +32,9 @@ function startPurchase(amount, send_email, book) {
   try {
   let access_token = getAccessToken()
   let email = getEmail();
+  if(email == 'dummy') {
+    window.location = 'profile-page#/profile-page'
+  }
   console.log('access_token ', access_token)
   fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/session/'+String(amount)+'&' + email+'&'+book+'&'+send_email).then((session) => {
       console.log("stripe response ", session)
