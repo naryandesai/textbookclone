@@ -55,7 +55,7 @@ async function goToText() {
 
 async function goToRef(ref) {
     var maxPages = myState.pdf._pdfInfo.numPages;
-    var currentPage = ref.num/3
+    var currentPage = ref.num/5
     var pageNum = 1;
     for (var j = parseInt(currentPage) + 1; j <= maxPages; j++) {
       var page = await myState.pdf.getPage(j);
