@@ -8,6 +8,6 @@ scenarios:
   - name: "FullApplication Requests"
     flow:
       - function: "generateRandomPayload"
-      - post:
-          url: "/fullapplication"
+      - get:
+          url: "/"
           json: "{{payload}}"

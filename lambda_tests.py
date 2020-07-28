@@ -19,6 +19,17 @@ class TestAdd(unittest.TestCase):
       self.assertEqual(resp.json()['amount_total'], 9900)
 
 
+    """
+    email endpoint registers a sale, parameters arkadiusz.krawczyk.1993@gmail.com&bio&false&9900 mean
+    arkadiusz.krawczyk.1993@gmail.com - person who bought boook
+    bio - name of book
+    false - send email (true if we want email, false if not)
+    9900 - price of book
+
+    Charge endpoint with parameters arkadiusz.krawczyk.1993@gmail.com&bio means
+    we want to check if person with this email bought book 'bio'. Response is the amount they paid last for it.
+
+    """
 
     def test_buying_and_querying(self):
       resp = requests.get('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/email/arkadiusz.krawczyk.1993@gmail.com&bio&false&9900')

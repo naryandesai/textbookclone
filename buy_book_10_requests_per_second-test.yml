@@ -1,5 +1,5 @@
 config:
-  target: "https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/session/990&arkadiusz.krawczyk.1993@gmail.com&book&false&1234"
+  target: "https://8wrro7by93.execute-api.us-east-1.amazonaws.com"
   processor: "./random-fullapplication-payload.js"
   phases:
     - duration: 120
@@ -8,6 +8,6 @@ scenarios:
   - name: "FullApplication Requests"
     flow:
       - function: "generateRandomPayload"
-      - post:
-          url: "/fullapplication"
+      - get:
+          url: "/ferret/session/990&arkadiusz.krawczyk.1993@gmail.com&book&false&1234"
           json: "{{payload}}"
