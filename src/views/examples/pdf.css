@@ -1852,6 +1852,138 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
   display: none;
 }
 
+/* Alex update */
+
+#navigation_controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  /* max-width: 80%; */
+  padding: 10px 10px 20px;
+
+}
+
+.navigation_button_block {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.navigation_button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* background-color: red; */
+  padding: 0 10px;
+  flex-flow: column-reverse;
+}
+
+.navigation_button .navIcon, .navigation_button.searchBttn {
+  padding: 10px;
+  /* background-color: aqua; */
+  /* border-radius: 30%; */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.navigation_button .navIcon:hover {
+  /* border-radius: 5px; */
+  background-color: #e22d00;
+  transform: translateY(-5px);
+  /* box-shadow: inset -1px -1px 2px rgba(255, 255, 255, 0.7), */
+              /* 2px 2px 2px rgba(255, 255, 255, 0.5) */
+              /* 2px 24px 10px rgba(255, 255, 255, 0.5) */
+  /* border-radius: 5px; */
+}
+
+.navigation_button .label {
+  /* color: red; */
+  font-size: 1.2rem;
+  /* padding-top: 9px; */
+}
+
+.navigation_button .backToDashboard {
+  background-color: rgb(86, 129, 76);
+  /* background-color: grey; */
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: bold;
+  /* color: black; */
+}
+
+.navigation_button .backToDashboard:hover {
+  /* border-radius: 5px; */
+  background-color: rgb(57, 168, 30);
+  /* background-color:#777; */
+  /* transform: translateX(-5px); */
+}
+
+.navigation_button .lastPage {
+  content: url(images/secondaryToolbarButton-rotateCcw.png);
+}
+
+.navigation_button .prevPage {
+  content: url(images/findbarButton-previous.png);
+}
+
+.navigation_button .nextPage {
+  content: url(images/findbarButton-next.png);
+}
+
+.navigation_button .zoomIn {
+  /* content: url(images/toolbarButton-zoomIn@2x.png); */
+  content: url(images/toolbarButton-zoomIn.png);
+}
+
+.navigation_button .zoomOut {
+  /* content: url(images/toolbarButton-zoomOut@2x.png); */
+  content: url(images/toolbarButton-zoomOut.png);
+}
+
+/* .navigation_button::before {
+  content: url(images/toolbarButton-search.png);
+} */
+
+#current_page {
+  text-align: center;
+}
+
+#preview {
+  /* overflow-x: auto; */
+  width: 100%;
+  height: 100px;
+  display: flex;
+  padding: 10px 20px;
+  background: white;
+  position: relative;
+}
+
+#slide-left, #slide-right {
+  position: absolute;
+  top: 0;
+  width: 25px;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+}
+
+#slide-left {
+  left: 0;
+  background-image: url('images/preview_arrow_left.png');
+}
+
+#slide-right {
+  right: 0;
+  background-image: url('images/preview_arrow_right.png');
+}
+
+
 @media all and (max-width: 900px) {
   #toolbarViewerMiddle {
     display: table;

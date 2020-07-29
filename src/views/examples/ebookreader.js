@@ -291,7 +291,8 @@ function Studentreader() {
                           console.log('ZOOM', myState.zoom)
                           render(myState);
                       });
-                      document.getElementById('go_previous')
+                      // document.getElementById('go_previous')
+                      document.getElementsByClassName('prevPage')[0]
                               .addEventListener('click', (e) => {
                                   if(myState.pdf == null
                                      || myState.currentPage == 1) return;
@@ -300,7 +301,8 @@ function Studentreader() {
                                           .value = myState.currentPage;
                                   render(myState);
                               });
-                      document.getElementById('go_next')
+                      // document.getElementById('go_next')
+                      document.getElementsByClassName('nextPage')[0]
                               .addEventListener('click', (e) => {
                                   if(myState.pdf == null
                                      || myState.currentPage > myState.pdf
@@ -397,7 +399,7 @@ function Studentreader() {
     }
   return (
     <div>
-              <div id="my_pdf_viewer" >
+              {/* <div id="my_pdf_viewer" >
                 <div id="navigation_controls" style={style}>
                     <div style={buttonsLeft}>
                     <div className="buttono pageUp" id="go_previous"></div>
@@ -418,8 +420,70 @@ function Studentreader() {
                         <canvas id="pdf_renderer" ></canvas>
                     </div>
                     <div id="preview" style={{overflowY: 'auto'}}> </div>
-              </div>
+              </div> */}
+
+    <div id="my_pdf_viewer" >
+      <div id="navigation_controls" style={style}>
+
+        <div className="navigation_button_block">
+          <div className="navigation_button">
+            <div className="backToDashboard">
+              Back to Dashboard
+            </div>
+          </div>
+        </div>
+
+        <div className="navigation_button_block">
+          <input id="current_page" className="toolbarField pageNumber" placeholder={1} type="number"/>
+        </div>
+
+        <div className="navigation_button_block">
+          <div className="navigation_button">
+            <div className="label">Previous Page</div>
+            <div className="navIcon prevPage"></div>
+          </div>
+          
+          <div className="navigation_button">
+            <div className="label">Next Page</div>
+            <div className="navIcon nextPage"></div>
+          </div>
+
+          <div className="navigation_button">
+            <div className="label">Last Location</div>
+            <div className="navIcon lastPage"></div>
+          </div>
+        </div>
+
+        <div className="navigation_button_block">
+          <div className="navigation_button" id="zoom_in">
+            <div className="label">Zoom In</div>
+            <div className="navIcon zoomIn"></div>
+          </div>
+
+          <div className="navigation_button" id="zoom_out">
+            <div className="label">Zoom Out</div>
+            <div className="navIcon zoomOut"></div>
+          </div>
+        </div>
+
+        <div className="navigation_button_block">
+          <input id='searchtext' type="text" className="toolbarField" placeholder="Search"></input>
+          <div className="navigation_button searchBttn">🔍</div>
+
+        </div>
+      </div>
+
+      <div id="canvas_container" style={canvasStyle}>
+        <canvas id="pdf_renderer" ></canvas>
+      </div>
+
+      <div id="preview">
+        <div id="slide-left"></div>
+        <div id="slide-right"></div>
+      </div>
     </div>
-      );
+
+  </div>
+  );
 }
 export default Studentreader;
