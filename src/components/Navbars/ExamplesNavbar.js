@@ -124,7 +124,7 @@ function ExamplesNavbar() {
             </NavItem>
             <NavItem>
               <NavLink id="tologin"  href="/profile-page#/profile-page" >
-                  Profile page
+                  {loggedIn() ? "Profile page" : "Login"}
               </NavLink>
               <div id="login" >
               </div>
