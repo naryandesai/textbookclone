@@ -276,6 +276,11 @@ function Studentreader() {
                       });
                     console.log(pdf.getPageLabels().then(e=>console.log(e)))
                     myState.pdf = pdf;
+                      document.getElementById("backToDashboard-bttn")
+                      .addEventListener('click', (e) => {
+                        // window.location = '/profile-page#/profile-page'
+                        window.location = '/#/profile-page'
+                      });
                       document.getElementById('zoom_in')
                       .addEventListener('click', (e) => {
                           if(myState.pdf == null) return;
@@ -427,7 +432,7 @@ function Studentreader() {
 
         <div className="navigation_button_block">
           <div className="navigation_button">
-            <div className="backToDashboard">
+            <div className="backToDashboard" id="backToDashboard-bttn">
               Back to Dashboard
             </div>
           </div>
