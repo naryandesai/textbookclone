@@ -473,7 +473,7 @@ function Studentreader() {
 
         <div className="navigation_button_block">
           <input id='searchtext' type="text" className="toolbarField" placeholder="Search"></input>
-          <div className="navigation_button searchBttn">🔍</div>
+          <div className="navigation_button searchBttn" onClick={goToText}>🔍</div>
 
         </div>
       </div>
