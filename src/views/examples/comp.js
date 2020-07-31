@@ -172,7 +172,7 @@ function Comp() {
           color="info"
           size="lg"
         >
-          Purchase online edition for $119
+          Purchase online edition for $79
         </Button>
         <Button
           block
@@ -184,7 +184,7 @@ function Comp() {
           color="info"
           size="lg"
         >
-          Buy extra physical edition for $49
+          Buy extra physical edition for $40
         </Button>
         <Button
           block
@@ -196,7 +196,7 @@ function Comp() {
           color="info"
           size="lg"
         >
-          Purchase online and physical edition for $198
+          Purchase online and physical edition for $119
         </Button>
       </div>
     </Col>
