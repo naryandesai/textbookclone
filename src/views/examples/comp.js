@@ -107,8 +107,7 @@ function Comp() {
           console.log(data)
               console.log('data', data)
               let found = false
-              console.log(data)
-              if(data == 9900 || data == 4000 || data == 13900){
+              if(data != 0){
                   found = true
               }
               console.log('charge ', found)
@@ -120,7 +119,7 @@ function Comp() {
                   document.getElementById("purchase").style.display = "block";
                   document.getElementById("bundle").style.display = "block";
               }
-              if(data == 9900 || data == 13900 || data == 4000) {
+              if(data != 0) {
                   document.getElementById("read").style.display = "block";
                   document.getElementById("purchase").style.display = "none";
                   document.getElementById("bundle").style.display = "none";
@@ -169,11 +168,11 @@ function Comp() {
           id="purchase"
           className="btn-round"
           align-items="center"
-          onClick={() => startPurchase(9900, false, 'Computational Methods for Engineers with MATLAB Applications')}
+          onClick={() => startPurchase(11900, false, 'Computational Methods for Engineers with MATLAB Applications')}
           color="info"
           size="lg"
         >
-          Purchase online edition for $99
+          Purchase online edition for $119
         </Button>
         <Button
           block
@@ -181,11 +180,11 @@ function Comp() {
           style ={{display:'none'}}
           className="btn-round"
           align-items="center"
-          onClick={ () => startPurchase(4000, true, 'Computational Methods for Engineers with MATLAB Applications') }
+          onClick={ () => startPurchase(4900, true, 'Computational Methods for Engineers with MATLAB Applications') }
           color="info"
           size="lg"
         >
-          Buy extra physical edition for $40
+          Buy extra physical edition for $49
         </Button>
         <Button
           block
@@ -193,11 +192,11 @@ function Comp() {
           style ={{display:'block'}}
           className="btn-round"
           align-items="center"
-          onClick={ () => startPurchase(13900, true, 'Computational Methods for Engineers with MATLAB Applications')  }
+          onClick={ () => startPurchase(19800, true, 'Computational Methods for Engineers with MATLAB Applications')  }
           color="info"
           size="lg"
         >
-          Purchase online and physical edition for $139
+          Purchase online and physical edition for $198
         </Button>
       </div>
     </Col>
