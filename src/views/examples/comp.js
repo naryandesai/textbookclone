@@ -168,7 +168,7 @@ function Comp() {
           id="purchase"
           className="btn-round"
           align-items="center"
-          onClick={() => startPurchase(11900, false, 'Computational Methods for Engineers with MATLAB Applications')}
+          onClick={() => startPurchase(7900, false, 'Computational Methods for Engineers with MATLAB Applications')}
           color="info"
           size="lg"
         >
@@ -180,7 +180,7 @@ function Comp() {
           style ={{display:'none'}}
           className="btn-round"
           align-items="center"
-          onClick={ () => startPurchase(4900, true, 'Computational Methods for Engineers with MATLAB Applications') }
+          onClick={ () => startPurchase(4000, true, 'Computational Methods for Engineers with MATLAB Applications') }
           color="info"
           size="lg"
         >
@@ -192,7 +192,7 @@ function Comp() {
           style ={{display:'block'}}
           className="btn-round"
           align-items="center"
-          onClick={ () => startPurchase(19800, true, 'Computational Methods for Engineers with MATLAB Applications')  }
+          onClick={ () => startPurchase(11900, true, 'Computational Methods for Engineers with MATLAB Applications')  }
           color="info"
           size="lg"
         >
