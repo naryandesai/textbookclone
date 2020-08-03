@@ -274,6 +274,7 @@ function Studentreader() {
                       console.log(outline)
                       });
                     console.log(pdf.getPageLabels().then(e=>console.log(e)))
+                    var previewbarPosition = 1;
                     myState.pdf = pdf;
                       document.getElementById("backToDashboard-bttn")
                       .addEventListener('click', (e) => {
