@@ -15,7 +15,6 @@ var myState = {
 
 var amount = 0
 
-
 var boughtPhysicalAmount = false
 
 async function goToPage(num) {
@@ -221,7 +220,7 @@ function Studentreader() {
       .then( data =>  {
         console.log('data', data)
         let found = false
-        if(data == 9900 || data == 4000 || data == 13900){
+        if(data != 0){
             found = true
         }
         amount = data
@@ -465,8 +464,24 @@ function Studentreader() {
             </div>
           </div>
 
+<<<<<<< HEAD
           <div className="navigation_button_block">
             <input id="current_page" className="toolbarField pageNumber" placeholder={1} type="number"/>
+=======
+        <div className="navigation_button_block">
+          <input id="current_page" className="toolbarField pageNumber" placeholder={1} type="number"/>
+        </div>
+
+        <div className="navigation_button_block">
+          <div className="navigation_button">
+            <div className="label">Previous Page</div>
+            <div className="navIcon prevPage"></div>
+          </div>
+
+          <div className="navigation_button">
+            <div className="label">Next Page</div>
+            <div className="navIcon nextPage"></div>
+>>>>>>> d20fd3348ae3352abb4c6057f3e7919dbac1d990
           </div>
 
           <div className="navigation_button_block">
