@@ -319,6 +319,57 @@ function Studentreader() {
                                           .value = myState.currentPage;
                                   render(myState);
                       });
+                                    // 
+              document.getElementById('slide-left')
+              .addEventListener('click', (e) => {
+                console.log(document.getElementById('preview').style.width)
+                if (previewbarPosition === 1) {
+
+                }
+                else {
+                  previewbarPosition = previewbarPosition + 80;
+                  document.getElementById('preview').style.marginLeft = previewbarPosition + 'px';
+                }
+            });
+            document.getElementById('slide-right')
+              .addEventListener('click', (e) => {
+                // console.log("goto ")
+                previewbarPosition = previewbarPosition - 80;
+                document.getElementById('preview').style.marginLeft = previewbarPosition + 'px';
+            });
+            document.getElementById('range-control')
+              .addEventListener('change', (e) => {
+                console.log("goto " + e.target.value)
+                switch (e.target.value) {
+                  case "1":
+                    previewbarPosition = 1;
+                  break;
+                  case "100":
+                    previewbarPosition = -7999;
+                  break;
+                  case "200":
+                    previewbarPosition = -15998;
+                  break;
+                  case "300":
+                    previewbarPosition = -23997;
+                    // previewbarPosition = -28797;
+                  break;
+                  case "400":
+                    previewbarPosition = -31996;
+                    // previewbarPosition = -38396;
+                  break;
+                  case "500":
+                    previewbarPosition = -39995;
+                  break;
+                  case "600":
+                    previewbarPosition = -47994;
+                  break;
+                  
+                  default:
+                    console.log("something wrong with range-control switch and arg was: " + e.target.value)
+                }
+                document.getElementById('preview').style.marginLeft = previewbarPosition + 'px';
+            });
                       document.getElementById('current_page')
                       .addEventListener('keypress', (e) => {
                           if(myState.pdf == null) return;
@@ -403,92 +454,79 @@ function Studentreader() {
         whiteSpace: 'nowrap',
     }
   return (
-    <div>
-              {/* <div id="my_pdf_viewer" >
-                <div id="navigation_controls" style={style}>
-                    <div style={buttonsLeft}>
-                    <div className="buttono pageUp" id="go_previous"></div>
-                    <div className="buttono pageDown" id="go_next"></div>
-                    <input id="current_page" className="toolbarField pageNumber" placeholder={1} type="number"/>
-                </div>
-
-                <div style={buttonsCenter}>
-                <div className="buttono zoomIn" id="zoom_in"></div>
-                <div className="buttono zoomOut" id="zoom_out"></div>
-                </div>
-                <div style={buttonsRight}>
-                <input id='searchtext' type="text" className="toolbarField" placeholder="Go to text"></input>
-                <button className="buttono search" id="go" onClick={goToText}>🔍</button>
-                </div>
-            </div>
-                    <div id="canvas_container" style={canvasStyle}>
-                        <canvas id="pdf_renderer" ></canvas>
-                    </div>
-                    <div id="preview" style={{overflowY: 'auto'}}> </div>
-              </div> */}
-
     <div id="my_pdf_viewer" >
-      <div id="navigation_controls" style={style}>
+        <div id="navigation_controls" style={style}>
 
-        <div className="navigation_button_block">
-          <div className="navigation_button">
-            <div className="backToDashboard" id="backToDashboard-bttn">
-              Back to Dashboard
+          <div className="navigation_button_block">
+            <div className="navigation_button">
+              <div className="backToDashboard" id="backToDashboard-bttn">
+                Back to Dashboard
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="navigation_button_block">
-          <input id="current_page" className="toolbarField pageNumber" placeholder={1} type="number"/>
-        </div>
-
-        <div className="navigation_button_block">
-          <div className="navigation_button">
-            <div className="label">Previous Page</div>
-            <div className="navIcon prevPage"></div>
-          </div>
-          
-          <div className="navigation_button">
-            <div className="label">Next Page</div>
-            <div className="navIcon nextPage"></div>
+          <div className="navigation_button_block">
+            <input id="current_page" className="toolbarField pageNumber" placeholder={1} type="number"/>
           </div>
 
-          <div className="navigation_button">
-            <div className="label">Last Location</div>
-            <div className="navIcon lastPage"></div>
+          <div className="navigation_button_block">
+            <div className="navigation_button">
+              <div className="label">Previous Page</div>
+              <div className="navIcon prevPage"></div>
+            </div>
+            
+            <div className="navigation_button">
+              <div className="label">Next Page</div>
+              <div className="navIcon nextPage"></div>
+            </div>
+
+            <div className="navigation_button">
+              <div className="label">Last Location</div>
+              <div className="navIcon lastPage"></div>
+            </div>
+          </div>
+
+          <div className="navigation_button_block">
+            <div className="navigation_button" id="zoom_in">
+              <div className="label">Zoom In</div>
+              <div className="navIcon zoomIn"></div>
+            </div>
+
+            <div className="navigation_button" id="zoom_out">
+              <div className="label">Zoom Out</div>
+              <div className="navIcon zoomOut"></div>
+            </div>
+          </div>
+
+          <div className="navigation_button_block">
+            <input id='searchtext' type="text" className="toolbarField" placeholder="Search"></input>
+            <div className="navigation_button searchBttn" onClick={goToText}>🔍</div>
+
           </div>
         </div>
 
-        <div className="navigation_button_block">
-          <div className="navigation_button" id="zoom_in">
-            <div className="label">Zoom In</div>
-            <div className="navIcon zoomIn"></div>
-          </div>
-
-          <div className="navigation_button" id="zoom_out">
-            <div className="label">Zoom Out</div>
-            <div className="navIcon zoomOut"></div>
+        <div id="canvas_container" style={canvasStyle}>
+          <canvas id="pdf_renderer"></canvas>
+          <div id="preview-step-controller">
+            <label for="cars">Choose range:</label>
+            <select name="preview-range" id="range-control">
+              <option value="1">1-100</option>
+              <option value="100">101-200</option>
+              <option value="200">201-300</option>
+              <option value="300">301-400</option>
+              <option value="400">401-500</option>
+              <option value="500">501-600</option>
+            </select> 
           </div>
         </div>
 
-        <div className="navigation_button_block">
-          <input id='searchtext' type="text" className="toolbarField" placeholder="Search"></input>
-          <div className="navigation_button searchBttn" onClick={goToText}>🔍</div>
-
+        <div className="preview-wrapper">
+          <div id="preview"></div>
+          <div id="slide-left"></div>
+          <div id="slide-right"></div>
         </div>
+
       </div>
-
-      <div id="canvas_container" style={canvasStyle}>
-        <canvas id="pdf_renderer" ></canvas>
-      </div>
-
-      <div id="preview">
-        <div id="slide-left"></div>
-        <div id="slide-right"></div>
-      </div>
-    </div>
-
-  </div>
-  );
+   );
 }
 export default Studentreader;
