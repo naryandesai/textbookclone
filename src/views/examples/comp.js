@@ -123,6 +123,8 @@ function Comp() {
                   document.getElementById("read").style.display = "block";
                   document.getElementById("purchase").style.display = "none";
                   document.getElementById("bundle").style.display = "none";
+                  document.getElementById("coupon").style.display = "none";
+                  document.getElementById("couponbutton").style.display = "none";
               }
 
                 })
@@ -197,6 +199,19 @@ function Comp() {
           size="lg"
         >
           Purchase online and physical edition for $119
+        </Button>
+        <Input id="coupon" placeholder="coupon code">
+        </Input>
+        <Button
+          block
+          id='couponbutton'
+          className="btn-round"
+          align-items="center"
+          onClick={ () => startPurchase(document.getElementById("coupon").value, true, 'Computational Methods for Engineers with MATLAB Applications') }
+          color="info"
+          size="lg"
+        >
+          Redeem using coupon code
         </Button>
       </div>
     </Col>

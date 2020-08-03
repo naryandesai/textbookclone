@@ -108,7 +108,7 @@ function Bioprocess() {
               console.log('data', data)
               let found = false
               console.log(data)
-              if(data == 9900 || data == 4000 || data == 13900){
+              if(data != 0){
                   found = true
               }
               console.log('charge ', found)
@@ -120,10 +120,12 @@ function Bioprocess() {
                   document.getElementById("purchase").style.display = "block";
                   document.getElementById("bundle").style.display = "block";
               }
-              if(data == 9900 || data == 13900 || data == 4000) {
+              if(data != 0) {
                   document.getElementById("read").style.display = "block";
                   document.getElementById("purchase").style.display = "none";
                   document.getElementById("bundle").style.display = "none";
+                  document.getElementById("coupon").style.display = "none";
+                  document.getElementById("couponbutton").style.display = "none";
               }
 
                 })
@@ -198,6 +200,19 @@ function Bioprocess() {
           size="lg"
         >
           Purchase online and physical edition for $139
+        </Button>
+        <Input id="coupon" placeholder="coupon code">
+        </Input>
+        <Button
+          block
+          id='couponbutton'
+          className="btn-round"
+          align-items="center"
+          onClick={ () => startPurchase(document.getElementById("coupon").value, true, 'Chemical and Bio-Process Control physical') }
+          color="info"
+          size="lg"
+        >
+          Redeem using coupon code
         </Button>
       </div>
     </Col>
