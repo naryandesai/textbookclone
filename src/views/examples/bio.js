@@ -44,17 +44,20 @@ function startPurchase(amount, send_email, book) {
       .then((stripe) => {
 
           console.log('requesting stripe redirect', session)
-          if(session.includes("Confirmation email sent")) {
-            alert("Book code redeemed! Reloading page.")
-            window.location.reload()
-            return;
+          try {
+            if(session.includes("Confirmation email sent")) {
+              alert("Book code redeemed! Reloading page.")
+              window.location.reload()
+              return;
+            }
           }
+          catch(err) {}
           let sessionId = session.id
           const { error } = stripe.redirectToCheckout({
             sessionId,
           }).catch((error) =>
           {console.log(error);})}).catch((error) =>
-          alert('Coupon code not recognized.'));
+          {console.log(error);console.log('Coupon code not recognized.');});
       }).catch(console.log)
     } catch(err) {
       window.location='/profile-page#/profile-page'
