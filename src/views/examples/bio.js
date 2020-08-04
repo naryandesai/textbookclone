@@ -36,13 +36,17 @@ function startPurchase(amount, send_email, book) {
     window.location = 'profile-page#/profile-page'
   }
   console.log('access_token ', access_token)
-  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/session/'+String(amount)+'&' + email+'&'+book+'&'+send_email).then((session) => {
+  fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/session/'+String(amount)+'&' + email+'&'+book+'&'+send_email+'&'+new Date().getTime()).then((session) => {
       console.log("stripe response ", session)
       return session.json()}).then((session) => {
       console.log("stripe response ", session)
       const stripePromise = loadStripe(process.env.REACT_APP_CHECKOUT_KEY)
       .then((stripe) => {
+
           console.log('requesting stripe redirect', session)
+          if(session.includes("Confirmation email sent")) {
+            window.location.reload()
+          }
           let sessionId = session.id
           const { error } = stripe.redirectToCheckout({
             sessionId,
@@ -101,8 +105,8 @@ function Bioprocess() {
   try{
     try {
       let email = getEmail()
-        fetch("https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/charge/"+email+"&Chemical and Bio-Process Control")
-        .then( res => res.json() )
+        fetch("https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/charge/"+email+"&Chemical and Bio-Process Control"+"&"+new Date().getTime())
+        .then( res => res.text() )
         .then( data =>  {
           console.log(data)
               console.log('data', data)
@@ -195,7 +199,7 @@ function Bioprocess() {
           style ={{display:'block'}}
           className="btn-round"
           align-items="center"
-          onClick={ () => startPurchase(13900, true, 'Chemical and Bio-Process Control physical')  }
+          onClick={ () => startPurchase(13900, true, 'Chemical and Bio-Process Control')  }
           color="info"
           size="lg"
         >
@@ -208,7 +212,7 @@ function Bioprocess() {
           id='couponbutton'
           className="btn-round"
           align-items="center"
-          onClick={ () => startPurchase(document.getElementById("coupon").value, true, 'Chemical and Bio-Process Control physical') }
+          onClick={ () => startPurchase(document.getElementById("coupon").value, true, 'Chemical and Bio-Process Control') }
           color="info"
           size="lg"
         >
