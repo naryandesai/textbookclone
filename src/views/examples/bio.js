@@ -57,7 +57,7 @@ function startPurchase(amount, send_email, book) {
             sessionId,
           }).catch((error) =>
           {console.log(error);})}).catch((error) =>
-          {console.log(error);console.log('Coupon code not recognized.');});
+          {console.log(error);alert('Coupon code not recognized.');});
       }).catch(console.log)
     } catch(err) {
       window.location='/profile-page#/profile-page'
