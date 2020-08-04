@@ -24,12 +24,71 @@ async function goToPage(num) {
     window.scrollTo(0, 0)
 }
 
+let arrayResultPages = []
+let currentSearchPosition = 0
+
+async function searchText() {
+
+  arrayResultPages = []
+
+  var searchText = document.getElementById("searchtext").value
+  searchText.replace(/\s+/g, '');
+  searchText = searchText.toLowerCase()
+
+  var maxPages = myState.pdf._pdfInfo.numPages;
+  console.log("pages summary " + maxPages)
+
+  for (var i = 1; i <= maxPages; i++) {
+  // for (var i = 1; i <= 10; i++) {
+      var page = await myState.pdf.getPage(i);
+      var textContent = await page.getTextContent();
+      textContent = textContent.items.map(function (s) { return s.str; }).join('').toLowerCase(); // value page text
+      if (textContent.includes(searchText)) {
+        arrayResultPages.push(i)
+      }
+    }
+
+  if (arrayResultPages.length === 0) {
+    console.log("\""+searchText+"\"" + " is not found in the document")
+  }
+  else {
+    console.log(arrayResultPages)
+    let startPage = arrayResultPages[0]
+    myState.currentPage = startPage
+    document.getElementById("current_page").value = startPage
+    render(myState)
+  }
+}
+
+async function nextSearchResult() {
+  if (currentSearchPosition < arrayResultPages.length-1) {
+    currentSearchPosition = currentSearchPosition + 1;
+
+    let loadPage = arrayResultPages[currentSearchPosition]
+    myState.currentPage = loadPage
+    document.getElementById("current_page").value = loadPage
+    render(myState)
+  }
+}
+
+async function prevSearchResult() {
+  if (currentSearchPosition > 0) {
+    currentSearchPosition = currentSearchPosition - 1;
+
+    let loadPage = arrayResultPages[currentSearchPosition]
+    myState.currentPage = loadPage
+    document.getElementById("current_page").value = loadPage
+    render(myState)
+  }
+}
+
+// old function, would be refactoring furtherly.
 async function goToText() {
     var searchText = document.getElementById("searchtext").value
     searchText.replace(/\s+/g, '');
     var currentPage = myState.currentPage
     if(searchText) {
-        console.log(searchText, currentPage)
+      console.log(searchText, currentPage)
     }
     searchText = searchText.toLowerCase()
     var maxPages = myState.pdf._pdfInfo.numPages;
@@ -42,7 +101,8 @@ async function goToText() {
       var textContent = await page.getTextContent();
       textContent = textContent.items.map(function (s) { return s.str; }).join('').toLowerCase(); // value page text
       if (textContent.includes(searchText)) {
-        console.log(textContent)
+        // console.log(textContent)
+        // console.log(searchText + " -----> " + j)
         pageNum = j;
         break;
       }
@@ -259,7 +319,7 @@ function Studentreader() {
                     var pages = []; while (pages.length < doc.numPages) {pages.push(pages.length + 1);
                       // create a div for each page and build a small canvas for it
                       let num = pages.length
-                      console.log(num)
+                      // console.log(num)
                       var div = document.getElementById("preview");
                       let result = await doc.getPage(num).then((e) => makeThumb(num, e))
                         .then(function (canvas) {
@@ -500,8 +560,12 @@ function Studentreader() {
 
           <div className="navigation_button_block">
             <input id='searchtext' type="text" className="toolbarField" placeholder="Search"></input>
-            <div className="navigation_button searchBttn" onClick={goToText}>🔍</div>
+            {/* <div className="navigation_button searchBttn" onClick={goToText}>🔍</div> */}
+            <div className="navigation_button searchBttn" onClick={searchText}>🔍</div>
 
+            <div className="navigation_button searchBttn" onClick={prevSearchResult}>prev</div>
+            <div className="navigation_button searchBttn" onClick={nextSearchResult}>next</div>
+            
           </div>
         </div>
 
