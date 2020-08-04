@@ -60,14 +60,14 @@ function ProfilePage() {
   if(window.location.href.indexOf('email') > -1) {
     let user = (CognitoAuth.getCurrentUser())
     let email =''
-    let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.3v6khmrs69c87vlmcipjcloi0c.'+user.username+'.userData'])['UserAttributes']
+    let user_attributes = JSON.parse(user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.userData'])['UserAttributes']
     for(var attribute in user_attributes) {
         console.log(user_attributes[attribute])
         if(user_attributes[attribute].Name == 'email') {
             email = user_attributes[attribute].Value
         }
     }
-    let access_token = user.storage['CognitoIdentityServiceProvider.3v6khmrs69c87vlmcipjcloi0c.'+user.username+'.idToken']
+    let access_token = user.storage['CognitoIdentityServiceProvider.4hj4872ba7c14i22oe9k5304mv.'+user.username+'.idToken']
     console.log('access_token ', access_token)
     fetch('https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/email/'+email, {
         headers: {
