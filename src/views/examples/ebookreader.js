@@ -276,7 +276,7 @@ function Studentreader() {
     let ebook = String(window.location).split('/').slice(-1)[0];
     let email = getEmail();
     fetch("https://8wrro7by93.execute-api.us-east-1.amazonaws.com/ferret/charge/"+email+"&"+ebook)
-      .then( res => res.json() )
+      .then( res => res.text() )
       .then( data =>  {
         console.log('data', data)
         let found = false
@@ -379,7 +379,7 @@ function Studentreader() {
                                           .value = myState.currentPage;
                                   render(myState);
                       });
-                                    // 
+                                    //
               document.getElementById('slide-left')
               .addEventListener('click', (e) => {
                 console.log(document.getElementById('preview').style.width)
@@ -424,7 +424,7 @@ function Studentreader() {
                   case "600":
                     previewbarPosition = -47994;
                   break;
-                  
+
                   default:
                     console.log("something wrong with range-control switch and arg was: " + e.target.value)
                 }
@@ -534,7 +534,7 @@ function Studentreader() {
               <div className="label">Previous Page</div>
               <div className="navIcon prevPage"></div>
             </div>
-            
+
             <div className="navigation_button">
               <div className="label">Next Page</div>
               <div className="navIcon nextPage"></div>
@@ -565,7 +565,7 @@ function Studentreader() {
 
             <div className="navigation_button searchBttn" onClick={prevSearchResult}>prev</div>
             <div className="navigation_button searchBttn" onClick={nextSearchResult}>next</div>
-            
+
           </div>
         </div>
 
@@ -580,7 +580,7 @@ function Studentreader() {
               <option value="300">301-400</option>
               <option value="400">401-500</option>
               <option value="500">501-600</option>
-            </select> 
+            </select>
           </div>
         </div>
 
