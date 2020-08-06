@@ -18,6 +18,7 @@ var amount = 0
 var boughtPhysicalAmount = false
 
 async function goToPage(num) {
+  console.log("GOTOPAGE")
     myState.currentPage = num
     document.getElementById("current_page").value = num
     render(myState)
