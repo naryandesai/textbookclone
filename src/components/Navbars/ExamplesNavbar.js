@@ -28,7 +28,7 @@ function getName() {
 function loggedIn() {
   try {
     var username = (CognitoAuth.getCurrentUser().username)
-    console.log("logged in as " + username)
+    console.log("logged in as " + username + " user")
     return true
   }
   catch(err) {
