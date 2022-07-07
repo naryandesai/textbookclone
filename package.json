@@ -11,7 +11,7 @@
     "aws-amplify-react": "^4.1.17",
     "aws-sdk": "^2.706.0",
     "faker": "^4.1.0",
-    "moment": "2.24.0",
+    "moment": "2.29.4",
     "node-sass": "4.12.0",
     "nouislider": "14.0.2",
     "pdfjs": "^2.3.9",
