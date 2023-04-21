@@ -9,7 +9,7 @@
     "artillery": "^1.6.1",
     "aws-amplify": "^3.0.18",
     "aws-amplify-react": "^4.1.17",
-    "aws-sdk": "^2.706.0",
+    "aws-sdk": "^2.1362.0",
     "faker": "^4.1.0",
     "moment": "2.24.0",
     "node-sass": "4.12.0",
